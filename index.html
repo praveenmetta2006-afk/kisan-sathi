@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kisaan Saathi - The Agri-Tech Ecosystem</title>
+    <!-- Use a modern, digital-style font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --color-navy: #0b0c10;
+            --color-cyan: #66fcf1;
+            --color-emerald: #45a29e;
+            --color-gray: #c5c6c7;
+            --color-dark-gray: #1f2833;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-navy);
+            color: #ffffff;
+            transition: background-color 0.3s ease;
+        }
+        .container {
+            max-width: 600px;
+        }
+        .nav-icon {
+            @apply flex flex-col items-center justify-center p-2 transition-colors duration-200;
+        }
+        .nav-icon.active .icon-span {
+            color: var(--color-cyan);
+            text-shadow: 0 0 8px rgba(102, 252, 241, 0.6);
+        }
+        .nav-icon:hover .icon-span {
+            color: var(--color-cyan);
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        /* Glassmorphism card effect */
+        .glass-card {
+            background: rgba(31, 40, 51, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(102, 252, 241, 0.4);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            @apply p-6 rounded-3xl mb-6 transition-transform duration-300;
+        }
+        .glass-card:hover {
+            transform: translateY(-5px);
+        }
+        .btn-futuristic {
+            background: linear-gradient(145deg, #1f2833, #0b0c10);
+            border: 1px solid var(--color-cyan);
+            box-shadow: 5px 5px 10px #080a0d, -5px -5px 10px #141a20;
+            @apply text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300;
+        }
+        .btn-futuristic:hover {
+            background: linear-gradient(145deg, #0b0c10, #1f2833);
+            transform: scale(1.05);
+            box-shadow: 2px 2px 5px #080a0d, -2px -2px 5px #141a20;
+        }
+        .input-futuristic {
+            background: var(--color-dark-gray);
+            border: 1px solid var(--color-emerald);
+            @apply w-full rounded-xl text-white px-4 py-3 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-200;
+        }
+        .text-neon-cyan {
+            color: var(--color-cyan);
+            text-shadow: 0 0 5px rgba(102, 252, 241, 0.8);
+        }
+        .text-neon-emerald {
+            color: var(--color-emerald);
+            text-shadow: 0 0 5px rgba(69, 162, 158, 0.8);
+        }
+        #pest-preview {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            border-radius: 1rem;
+            border: 2px solid var(--color-emerald);
+        }
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+        }
+        .voice-button-pulse {
+            animation: pulse-dot 1s infinite;
+        }
+        .text-gray-400 { color: #9ca3af; }
+        .text-gray-200 { color: #e5e7eb; }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border-left-color: #66fcf1;
+            animation: spin 1s ease infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #community-posts {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .ar-container {
+            width: 100%;
+            height: 400px;
+            background: #0b0c10;
+            border: 1px solid var(--color-cyan);
+            border-radius: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .ar-canvas {
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-black text-gray-200">
+
+    <div class="container mx-auto p-4 flex flex-col min-h-screen">
+        <!-- Header with Language Selector -->
+        <header class="flex justify-between items-center py-4">
+            <h1 class="text-3xl font-bold text-white font-['Orbitron']" id="app-title">Kisaan Saathi</h1>
+            <div class="relative">
+                <select id="language-selector" class="bg-transparent border border-gray-600 text-sm font-semibold text-white rounded-full py-2 px-4 shadow-md focus:outline-none">
+                    <option value="en" class="bg-gray-800">English</option>
+                    <option value="hi" class="bg-gray-800">हिंदी</option>
+                    <option value="te" class="bg-gray-800">తెలుగు</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-grow">
+            <!-- Home Tab -->
+            <section id="home" class="tab-content active" data-lang-key="home_section">
+                <div class="glass-card">
+                    <h2 class="text-xl font-semibold mb-2 text-neon-cyan" data-lang-key="home_welcome">Hello, Farmer!</h2>
+                    <p class="text-gray-400 text-sm" data-lang-key="home_today_updates">Here is your real-time data analysis.</p>
+                </div>
+
+                <!-- Climate & Weather Card -->
+                <div class="glass-card">
+                    <h3 class="text-lg font-bold mb-4 text-neon-emerald" data-lang-key="climate_title">🌦 Environmental & Climate</h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-3xl" role="img" aria-label="sun">☀️</span>
+                            <div class="flex flex-col">
+                                <span class="text-xs font-medium text-gray-400" data-lang-key="weather_label">Weather</span>
+                                <span class="text-2xl font-bold text-white" id="weather-temp">34°C</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-sm text-gray-400" id="weather-desc">Sunny</span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 text-center text-sm font-medium">
+                        <div class="p-3 bg-gray-800 rounded-lg border border-gray-700">
+                            <span class="block text-xs text-gray-500" data-lang-key="humidity_label">Humidity</span>
+                            <span class="block font-semibold text-gray-200">72%</span>
+                        </div>
+                        <div class="p-3 bg-gray-800 rounded-lg border border-gray-700">
+                            <span class="block text-xs text-gray-500" data-lang-key="wind_label">Wind</span>
+                            <span class="block font-semibold text-gray-200">12 km/h</span>
+                        </div>
+                    </div>
+                    <div class="bg-red-900 bg-opacity-30 p-4 rounded-xl border border-red-500 mt-4">
+                        <p class="text-sm text-red-300 font-medium" data-lang-key="alerts_drought">Heatwave warning for your region. Ensure proper irrigation.</p>
+                    </div>
+                </div>
+                
+                <!-- Economic & Market Card -->
+                <div class="glass-card">
+                    <h3 class="text-lg font-bold mb-4 text-neon-cyan" data-lang-key="market_title">📉 Economic & Market Insights</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="font-medium text-gray-300" data-lang-key="crop_rice">Rice (Per Quintal)</span>
+                            <span class="font-bold text-green-400">₹ 3,500</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="font-medium text-gray-300" data-lang-key="crop_wheat">Wheat (Per Quintal)</span>
+                            <span class="font-bold text-green-400">₹ 2,800</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="font-medium text-gray-300" data-lang-key="crop_cotton">Cotton (Per Quintal)</span>
+                            <span class="font-bold text-green-400">₹ 6,200</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-400 mt-4" id="market-forecast-text" data-lang-key="market_forecast">AI forecast: Cotton prices are expected to rise by 5-8% next month.</p>
+                    <button id="get-market-analysis-button" class="w-full btn-futuristic border border-cyan-400 mt-4" data-lang-key="get_market_analysis">
+                        ✨ Get Live Market Analysis
+                        <span id="market-analysis-spinner" class="spinner hidden"></span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Advisory Tab -->
+            <section id="advisory" class="tab-content" data-lang-key="advisory_section">
+                <h2 class="text-2xl font-bold mb-4 font-['Orbitron'] text-neon-cyan" data-lang-key="advisory_title">🌱 Crop Advisory</h2>
+                <div class="glass-card">
+                    <h3 class="text-lg font-semibold mb-4 text-neon-emerald" data-lang-key="advisory_form_title">Get a Personalized Plan</h3>
+                    <form id="advisory-form" class="space-y-4">
+                        <div>
+                            <label for="soil-type" class="block text-sm font-medium text-gray-400 mb-1" data-lang-key="form_label_soil">Soil Type</label>
+                            <input type="text" id="soil-type" class="input-futuristic" placeholder="e.g., Loamy, Sandy, Clay" required>
+                        </div>
+                        <div>
+                            <label for="crop-type" class="block text-sm font-medium text-gray-400 mb-1" data-lang-key="form_label_crop">Desired Crop</label>
+                            <input type="text" id="crop-type" class="input-futuristic" placeholder="e.g., Rice, Wheat, Cotton" required>
+                        </div>
+                        <button type="submit" class="w-full btn-futuristic border border-cyan-400" data-lang-key="form_button_submit">
+                            ✨ Get Advisory
+                            <span id="advisory-spinner" class="spinner hidden"></span>
+                        </button>
+                    </form>
+                    <div id="advisory-result" class="mt-6 p-4 bg-gray-800 border border-cyan-400 text-gray-200 rounded-xl" style="display: none;">
+                        <h4 class="font-semibold mb-2 text-neon-cyan" data-lang-key="result_heading">Recommendations for your crop:</h4>
+                        <p id="result-text" class="text-sm whitespace-pre-wrap"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI Tools Tab -->
+            <section id="aitools" class="tab-content" data-lang-key="aitools_section">
+                <h2 class="text-2xl font-bold mb-4 font-['Orbitron'] text-neon-cyan" data-lang-key="aitools_title">🧠 AI Tools & AR View</h2>
+                <!-- Pest Detection Card -->
+                <div class="glass-card text-center">
+                    <h3 class="text-lg font-semibold mb-4 text-neon-emerald" data-lang-key="pests_title">AI Pest & Disease Detection</h3>
+                    <p class="text-gray-400 mb-4 text-sm" data-lang-key="pests_instruction">Upload a clear photo of the affected leaf or plant.</p>
+                    <label class="block cursor-pointer btn-futuristic border border-emerald-400">
+                        <input type="file" id="pest-upload" class="hidden" accept="image/*">
+                        <span data-lang-key="pests_button_upload">✨ Upload & Scan Image</span>
+                    </label>
+                    <img id="pest-preview" class="hidden mx-auto my-4 border-2 border-emerald-400">
+                    
+                    <div id="pest-result" class="mt-6 p-4 bg-gray-800 border border-emerald-400 text-gray-200 rounded-xl" style="display: none;">
+                        <h4 class="font-semibold mb-2 text-neon-emerald" data-lang-key="detection_heading">Detection Result:</h4>
+                        <p id="detection-text" class="text-sm whitespace-pre-wrap"></p>
+                    </div>
+                </div>
+                <!-- AR Guidance Card -->
+                <div class="glass-card">
+                    <h3 class="text-lg font-semibold mb-4 text-neon-cyan" data-lang-key="ar_guidance">AR Guidance</h3>
+                    <p class="text-gray-400 text-sm mb-4" data-lang-key="ar_info">"Point your phone's camera at the plant for AR-based application guidance."</p>
+                    <button id="ar-button" class="w-full btn-futuristic border border-cyan-400" data-lang-key="ar_action_button">Launch AR View</button>
+                    <div id="ar-canvas-container" class="ar-container mt-4 hidden">
+                        <canvas id="ar-canvas" class="ar-canvas"></canvas>
+                        <div id="ar-message" class="absolute hidden">
+                            <p class="text-lg font-semibold text-neon-cyan">Simulating AR pest scan...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Voice Assistant Tab -->
+            <section id="voice" class="tab-content" data-lang-key="voice_section">
+                <h2 class="text-2xl font-bold mb-4 font-['Orbitron'] text-neon-cyan" data-lang-key="voice_title">🗣 Voice Assistant</h2>
+                <div class="glass-card text-center">
+                    <p class="text-gray-400 mb-4 text-sm" data-lang-key="voice_instruction">Tap the microphone and ask your farming question in your language.</p>
+                    <button id="voice-button" class="bg-gray-800 p-8 rounded-full shadow-lg border border-gray-700 hover:border-emerald-400 transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a4 4 0 110-8 4 4 0 010 8z" />
+                        </svg>
+                        <span id="voice-spinner" class="spinner hidden"></span>
+                    </button>
+                    <p id="voice-status" class="mt-4 text-sm font-semibold text-gray-400" data-lang-key="voice_status_ready">Tap to speak</p>
+                    <div id="voice-response-area" class="mt-4 p-4 bg-gray-800 rounded-xl text-left hidden">
+                        <p id="voice-response-text" class="text-sm text-gray-200 whitespace-pre-wrap"></p>
+                    </div>
+                    <audio id="tts-audio" class="hidden" controls></audio>
+                </div>
+            </section>
+
+            <!-- Community Tab -->
+            <section id="community" class="tab-content relative" data-lang-key="community_section">
+                 <!-- New Overlay for Auth Error -->
+                <div id="community-auth-error" class="absolute inset-0 bg-gray-900 bg-opacity-90 z-10 flex-col items-center justify-center p-4 text-center hidden">
+                    <h3 class="text-xl font-bold text-red-400 mb-2">Authentication Failed</h3>
+                    <p class="text-gray-300">To use the community chat, you need to enable Anonymous sign-in in your Firebase project.</p>
+                    <p class="text-gray-400 text-sm mt-4">1. Go to your Firebase Console.<br>2. Navigate to Build > Authentication.<br>3. Click the 'Sign-in method' tab.<br>4. Click 'Anonymous' and enable it.</p>
+                </div>
+                
+                <h2 class="text-2xl font-bold mb-4 font-['Orbitron'] text-neon-cyan" data-lang-key="community_title">💬 Peer-to-Peer Community</h2>
+                <div class="glass-card flex-grow overflow-hidden flex flex-col">
+                    <p class="text-sm font-medium text-gray-400 mb-4" id="user-id-display">User ID: </p>
+                    <div id="community-posts" class="space-y-4 mb-4 flex-grow flex flex-col">
+                        <!-- Posts will be injected here by JavaScript -->
+                    </div>
+                    <form id="post-form" class="mt-auto flex space-x-2">
+                        <input type="text" id="post-input" class="input-futuristic flex-grow" placeholder="Share your thoughts..." required>
+                        <button type="submit" class="btn-futuristic border border-emerald-400 px-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- AI Reply card -->
+                <div class="glass-card">
+                    <h3 class="text-lg font-semibold mb-4 text-neon-cyan" data-lang-key="ai_reply">AI Expert Reply</h3>
+                    <div id="ai-reply-area" class="bg-gray-800 p-4 rounded-xl mb-4 border border-gray-700">
+                        <p class="text-sm text-gray-400" id="community-reply-text" data-lang-key="ai_expert_reply_initial_text">The AI expert is ready to help. Post a question above to get a reply!</p>
+                    </div>
+                    <button id="ai-reply-button" class="w-full btn-futuristic border border-emerald-400">
+                        ✨ Get AI Expert Reply
+                        <span id="ai-reply-spinner" class="spinner hidden"></span>
+                    </button>
+                </div>
+
+                <!-- Gamified Learning -->
+                <div class="glass-card">
+                    <h3 class="text-lg font-semibold mb-4 text-neon-emerald" data-lang-key="learning_title">Gamified Learning</h3>
+                    <p class="text-sm text-gray-400 mb-2" data-lang-key="learning_progress">Complete tutorials to earn vouchers and rewards!</p>
+                    <div class="h-3 rounded-full overflow-hidden bg-gray-700">
+                        <div class="h-full rounded-full bg-gradient-to-r from-green-400 to-cyan-400" style="width: 50%;"></div>
+                    </div>
+                    <p class="text-sm text-right mt-1 font-semibold text-emerald-400" data-lang-key="learning_level">Level 2: Sustainable Farmer</p>
+                    
+                    <div id="quiz-area" class="mt-4 p-4 bg-gray-800 rounded-xl hidden">
+                        <p id="quiz-question" class="text-sm font-semibold mb-2 text-neon-cyan"></p>
+                        <div id="quiz-options" class="flex flex-col space-y-2"></div>
+                        <p id="quiz-result" class="mt-2 text-sm font-semibold hidden"></p>
+                    </div>
+
+                    <button id="get-quiz-button" class="w-full btn-futuristic border border-cyan-400 mt-4" data-lang-key="get_quiz">
+                        ✨ Get Daily Quiz
+                        <span id="quiz-spinner" class="spinner hidden"></span>
+                    </button>
+
+                    <button id="gemini-tip-button" class="w-full btn-futuristic border border-cyan-400 mt-4" data-lang-key="get_tip">
+                        ✨ Get a Sustainable Tip
+                        <span id="gemini-tip-spinner" class="spinner hidden"></span>
+                    </button>
+                    <p id="gemini-tip-text" class="mt-4 p-4 bg-gray-800 rounded-xl text-emerald-400 text-sm hidden"></p>
+                </div>
+            </section>
+
+            <!-- New Tools & Finance Tab -->
+            <section id="tools" class="tab-content">
+                <h2 class="text-2xl font-bold mb-4 font-['Orbitron'] text-neon-cyan" data-lang-key="tools_title">🚜 Farming Tools & Finance</h2>
+                
+                <!-- Shared Equipment Marketplace Card -->
+                <div class="glass-card">
+                    <h3 class="text-lg font-semibold mb-4 text-neon-emerald" data-lang-key="marketplace_title">Shared Equipment Marketplace</h3>
+                    <p class="text-gray-400 text-sm mb-4" data-lang-key="marketplace_desc">Access modern machinery from other farmers in your area at affordable rates.</p>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between text-sm p-3 bg-gray-800 rounded-lg border border-gray-700">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xl">🚜</span>
+                                <span class="font-medium text-gray-300" data-lang-key="tractor_rent">Tractor Rental</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="font-bold text-green-400">₹ 800</span>
+                                <span class="text-xs text-gray-500" data-lang-key="per_day">/Day</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-sm p-3 bg-gray-800 rounded-lg border border-gray-700">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xl">🌾</span>
+                                <span class="font-medium text-gray-300" data-lang-key="harvester">Harvester</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="font-bold text-green-400">₹ 1,500</span>
+                                <span class="text-xs text-gray-500" data-lang-key="per_day">/Day</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="w-full btn-futuristic border border-cyan-400 mt-6" data-lang-key="browse_equipment">Browse Equipment</button>
+                </div>
+
+                <!-- Financial Advisory & Loan Checker Card -->
+                <div class="glass-card">
+                    <h3 class="text-lg font-semibold mb-4 text-neon-cyan" data-lang-key="finance_title">💰 Financial Advisory</h3>
+                    <p class="text-gray-400 text-sm mb-4" data-lang-key="finance_desc">Check your eligibility for farming loans instantly with our AI tool.</p>
+                    <form id="loan-form" class="space-y-4">
+                        <div>
+                            <label for="annual-income" class="block text-sm font-medium text-gray-400 mb-1" data-lang-key="form_label_income">Annual Income (₹)</label>
+                            <input type="number" id="annual-income" class="input-futuristic" placeholder="e.g., 50000" required>
+                        </div>
+                        <div>
+                            <label for="loan-amount" class="block text-sm font-medium text-gray-400 mb-1" data-lang-key="form_label_loan">Desired Loan Amount (₹)</label>
+                            <input type="number" id="loan-amount" class="input-futuristic" placeholder="e.g., 20000" required>
+                        </div>
+                        <button type="submit" class="w-full btn-futuristic border border-emerald-400" data-lang-key="form_button_check">
+                            ✨ Check Eligibility
+                            <span id="loan-spinner" class="spinner hidden"></span>
+                        </button>
+                    </form>
+                    <div id="loan-result" class="mt-6 p-4 bg-gray-800 border border-cyan-400 text-gray-200 rounded-xl" style="display: none;">
+                        <h4 class="font-semibold mb-2 text-neon-cyan" data-lang-key="loan_result_heading">Loan Eligibility Status:</h4>
+                        <p id="loan-text" class="text-sm"></p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav id="bottom-nav" class="sticky bottom-0 left-0 right-0 bg-gray-900 bg-opacity-80 p-2 border-t border-gray-700 backdrop-blur-sm rounded-t-3xl shadow-2xl z-20">
+            <div class="flex justify-around">
+                <a class="nav-icon active" data-tab-name="home">
+                    <span class="text-2xl icon-span">🏠</span>
+                    <span class="text-xs font-semibold mt-1" data-lang-key="nav_home">Home</span>
+                </a>
+                <a class="nav-icon" data-tab-name="advisory">
+                    <span class="text-2xl icon-span">🌱</span>
+                    <span class="text-xs font-semibold mt-1" data-lang-key="nav_advisory">Advisory</span>
+                </a>
+                <a class="nav-icon" data-tab-name="aitools">
+                    <span class="text-2xl icon-span">🧠</span>
+                    <span class="text-xs font-semibold mt-1" data-lang-key="nav_aitools">AI Tools</span>
+                </a>
+                <a class="nav-icon" data-tab-name="tools">
+                    <span class="text-2xl icon-span">🚜</span>
+                    <span class="text-xs font-semibold mt-1" data-lang-key="nav_tools">Tools</span>
+                </a>
+                <a class="nav-icon" data-tab-name="voice">
+                    <span class="text-2xl icon-span">🗣️</span>
+                    <span class="text-xs font-semibold mt-1" data-lang-key="nav_voice">Voice</span>
+                </a>
+                <a class="nav-icon" data-tab-name="community">
+                    <span class="text-2xl icon-span">💬</span>
+                    <span class="text-xs font-semibold mt-1" data-lang-key="nav_community">Community</span>
+                </a>
+            </div>
+        </nav>
+    </div>
+    
+    <!-- Tone.js moved to the end of body for better loading -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.min.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, addDoc, onSnapshot, collection, serverTimestamp, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js';
+
+        // --- Firebase and User Auth Setup ---
+        const firebaseConfig = {
+          apiKey: "AIzaSyCOxvKDXNfSBDzviRIAksB86WSsYvOR7lU",
+          authDomain: "kisaan-saathi-1e6a4.firebaseapp.com",
+          projectId: "kisaan-saathi-1e6a4",
+          storageBucket: "kisaan-saathi-1e6a4.appspot.com",
+          messagingSenderId: "348707909501",
+          appId: "1:348707909501:web:52747da8154c2dfe49a614"
+        };
+        const appId = firebaseConfig.appId;
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        let userId;
+        let communityListenerUnsubscribe = null;
+
+        // Simplified Authentication Handler
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // User is signed in.
+                userId = user.uid;
+                const communityAuthError = document.getElementById('community-auth-error');
+                if (communityAuthError) {
+                    communityAuthError.classList.add('hidden');
+                    communityAuthError.classList.remove('flex');
+                }
+                
+                const userIdDisplay = document.getElementById('user-id-display');
+                if (userIdDisplay) {
+                    userIdDisplay.textContent = `User ID: ${userId}`;
+                }
+
+                // Initialize Firestore listener only once after authentication is successful.
+                if (!communityListenerUnsubscribe) {
+                    const communityPostsContainer = document.getElementById('community-posts');
+                    const postsCollection = collection(db, `/artifacts/${appId}/public/data/community-posts`);
+                    const q = query(postsCollection);
+                    communityListenerUnsubscribe = onSnapshot(q, (snapshot) => {
+                        let posts = [];
+                        snapshot.forEach((doc) => posts.push({ ...doc.data(), id: doc.id }));
+                        posts.sort((a, b) => (a.timestamp?.seconds || 0) - (b.timestamp?.seconds || 0));
+
+                        if(communityPostsContainer) {
+                            communityPostsContainer.innerHTML = '';
+                            posts.forEach(post => {
+                                const postElement = document.createElement('div');
+                                const isCurrentUser = post.userId === userId;
+                                postElement.className = `p-3 rounded-xl max-w-xs ${isCurrentUser ? 'bg-cyan-800 self-end ml-auto' : 'bg-gray-700 self-start'}`;
+                                postElement.innerHTML = `
+                                    <p class="text-sm">${post.text}</p>
+                                    <p class="text-xs text-gray-400 mt-1 text-right">${isCurrentUser ? 'You' : `User: ${post.userId.substring(0, 6)}...`}</p>
+                                `;
+                                communityPostsContainer.appendChild(postElement);
+                            });
+                            communityPostsContainer.scrollTop = communityPostsContainer.scrollHeight;
+                        }
+                    }, (error) => {
+                        console.error("Firestore Snapshot Error:", error);
+                        showMessageBox("A database error occurred. Ensure your Firestore security rules are set up correctly.");
+                    });
+                }
+            } else {
+                // User is signed out. Attempt to sign in anonymously.
+                try {
+                    await signInAnonymously(auth);
+                    // The onAuthStateChanged listener will be called again with the new user,
+                    // so no further action is needed here.
+                } catch (error) {
+                    console.error("Anonymous sign-in failed:", error);
+                    // In Firebase v9+, the error code for disabled provider is 'auth/operation-not-allowed'.
+                    if (error.code === 'auth/operation-not-allowed') {
+                        const communityAuthError = document.getElementById('community-auth-error');
+                        if (communityAuthError) {
+                            communityAuthError.classList.remove('hidden');
+                            communityAuthError.classList.add('flex');
+                        }
+                    } else {
+                        showMessageBox("An unknown authentication error occurred. Please check the console.");
+                    }
+                }
+            }
+        });
+        
+        // --- Language translation data ---
+        const translations = {
+            en: {
+                app_title: "Kisaan Saathi",
+                home_section: "",
+                home_welcome: "Hello, Farmer!",
+                home_today_updates: "Here is your real-time data analysis.",
+                climate_title: "🌦 Environmental & Climate",
+                weather_label: "Weather",
+                humidity_label: "Humidity",
+                wind_label: "Wind",
+                alerts_drought: "Drought warning for your region. Implement water-saving measures.",
+                market_title: "📉 Economic & Market Insights",
+                market_forecast: "AI forecast: Cotton prices are expected to rise by 5-8% next month.",
+                get_market_analysis: "✨ Get Live Market Analysis",
+                crop_rice: "Rice (Per Quintal)",
+                crop_wheat: "Wheat (Per Quintal)",
+                crop_cotton: "Cotton (Per Quintal)",
+                advisory_section: "",
+                advisory_title: "🌱 Crop Advisory",
+                advisory_form_title: "Get a Personalized Plan",
+                form_label_soil: "Soil Type",
+                form_label_crop: "Desired Crop",
+                form_button_submit: "✨ Get Advisory",
+                result_heading: "Recommendations for your crop:",
+                aitools_section: "",
+                aitools_title: "🧠 AI Tools & AR View",
+                pests_title: "AI Pest & Disease Detection",
+                pests_instruction: "Upload a clear photo of the affected leaf or plant.",
+                pests_button_upload: "✨ Upload & Scan Image",
+                detection_heading: "Detection Result:",
+                ar_guidance: "AR Guidance",
+                ar_info: "Point your phone's camera at the plant for AR-based application guidance.",
+                ar_action_button: "Launch AR View",
+                voice_section: "",
+                voice_title: "🗣 Voice Assistant",
+                voice_instruction: "Tap the microphone and ask your farming question in your language.",
+                voice_status_ready: "Tap to speak",
+                voice_status_listening: "✨ Listening...",
+                voice_status_generating: "✨ Generating text...",
+                voice_status_speaking: "✨ Playing audio...",
+                community_section: "",
+                community_title: "💬 Peer-to-Peer Community",
+                post_input_placeholder: "Share your thoughts...",
+                tools_section: "",
+                tools_title: "🚜 Farming Tools & Finance",
+                marketplace_title: "Shared Equipment Marketplace",
+                marketplace_desc: "Access modern machinery from other farmers in your area at affordable rates.",
+                tractor_rent: "Tractor Rental",
+                harvester: "Harvester",
+                per_day: "/Day",
+                browse_equipment: "Browse Equipment",
+                finance_title: "💰 Financial Advisory",
+                finance_desc: "Check your eligibility for farming loans instantly with our AI tool.",
+                form_label_income: "Annual Income (₹)",
+                form_label_loan: "Desired Loan Amount (₹)",
+                form_button_check: "✨ Check Eligibility",
+                loan_result_heading: "Loan Eligibility Status:",
+                ai_reply: "AI Expert Reply",
+                get_ai_reply: "✨ Get AI Expert Reply",
+                ai_expert_reply_initial_text: "The AI expert is ready to help. Post a question above to get a reply!",
+                ai_reply_loading: "✨ AI is drafting a response...",
+                learning_title: "Gamified Learning",
+                learning_progress: "Complete tutorials to earn vouchers and rewards!",
+                learning_level: "Level 2: Sustainable Farmer",
+                get_tip: "✨ Get a Sustainable Tip",
+                get_tip_loading: "✨ Generating a tip...",
+                get_quiz: "✨ Get Daily Quiz",
+                quiz_correct: "✅ Correct!",
+                quiz_incorrect: "❌ Incorrect. Try again!",
+                nav_home: "Home",
+                nav_advisory: "Advisory",
+                nav_aitools: "AI Tools",
+                nav_tools: "Tools",
+                nav_voice: "Voice",
+                nav_community: "Community"
+            },
+            hi: {
+                app_title: "किसान साथी",
+                home_section: "",
+                home_welcome: "नमस्ते, किसान भाई!",
+                home_today_updates: "यह आपके आज के अपडेट हैं।",
+                climate_title: "🌦 पर्यावरण और जलवायु",
+                weather_label: "मौसम",
+                humidity_label: "नमी",
+                wind_label: "हवा",
+                alerts_drought: "आपके क्षेत्र में सूखे की चेतावनी। जल-बचत के उपाय लागू करें।",
+                market_title: "📉 आर्थिक और बाजार की जानकारी",
+                market_forecast: "एआई पूर्वानुमान: अगले महीने कपास की कीमतों में 5-8% की वृद्धि होने की उम्मीद है।",
+                get_market_analysis: "✨ लाइव बाजार विश्लेषण प्राप्त करें",
+                crop_rice: "चावल (प्रति क्विंटल)",
+                crop_wheat: "गेहूं (प्रति क्विंटल)",
+                crop_cotton: "कपास (प्रति क्विंटल)",
+                advisory_section: "",
+                advisory_title: "🌱 फसल सलाह",
+                advisory_form_title: "व्यक्तिगत योजना प्राप्त करें",
+                form_label_soil: "मिट्टी का प्रकार",
+                form_label_crop: "वांछित फसल",
+                form_button_submit: "✨ सलाह प्राप्त करें",
+                result_heading: "आपकी फसल के लिए सिफारिशें:",
+                aitools_section: "",
+                aitools_title: "🧠 एआई उपकरण और एआर दृश्य",
+                pests_title: "एआई कीट और रोग का पता लगाएं",
+                pests_instruction: "प्रभावित पत्ती या पौधे की एक स्पष्ट तस्वीर अपलोड करें।",
+                pests_button_upload: "✨ अपलोड करें और स्कैन करें",
+                detection_heading: "पहचान परिणाम:",
+                ar_guidance: "एआर मार्गदर्शन",
+                ar_info: "एआर-आधारित अनुप्रयोग मार्गदर्शन के लिए अपने फोन के कैमरे को पौधे पर इंगित करें।",
+                ar_action_button: "एआर दृश्य लॉन्च करें",
+                voice_section: "",
+                voice_title: "🗣 वॉयस असिस्टेंट",
+                voice_instruction: "माइक्रोफ़ोन पर टैप करें और अपनी भाषा में खेती से संबंधित प्रश्न पूछें।",
+                voice_status_ready: "बोलने के लिए टैप करें",
+                voice_status_listening: "✨ सुन रहा है...",
+                voice_status_generating: "✨ जवाब बना रहा है...",
+                voice_status_speaking: "✨ ऑडियो चला रहा है...",
+                community_section: "",
+                community_title: "💬 किसान समुदाय",
+                post_input_placeholder: "अपने विचार साझा करें...",
+                tools_section: "",
+                tools_title: "🚜 कृषि उपकरण और वित्त",
+                marketplace_title: "साझा उपकरण बाजार",
+                marketplace_desc: "अपने क्षेत्र के अन्य किसानों से किफायती दरों पर आधुनिक मशीनरी प्राप्त करें।",
+                tractor_rent: "ट्रैक्टर किराया",
+                harvester: "हार्वेस्टर",
+                per_day: "/दिन",
+                browse_equipment: "उपकरण ब्राउज़ करें",
+                finance_title: "💰 वित्तीय सलाहकार",
+                finance_desc: "हमारे AI टूल के साथ तुरंत कृषि ऋण के लिए अपनी पात्रता जांचें।",
+                form_label_income: "वार्षिक आय (₹)",
+                form_label_loan: "वांछित ऋण राशि (₹)",
+                form_button_check: "✨ पात्रता जांचें",
+                loan_result_heading: "ऋण पात्रता स्थिति:",
+                ai_reply: "एआई विशेषज्ञ उत्तर",
+                get_ai_reply: "✨ एआई विशेषज्ञ उत्तर प्राप्त करें",
+                ai_expert_reply_initial_text: "एआई विशेषज्ञ मदद के लिए तैयार है। एक उत्तर प्राप्त करने के लिए ऊपर एक प्रश्न पोस्ट करें!",
+                ai_reply_loading: "✨ एआई जवाब तैयार कर रहा है...",
+                learning_title: "गेमीफाइड लर्निंग",
+                learning_progress: "वाउचर और पुरस्कार अर्जित करने के लिए ट्यूटोरियल पूरा करें!",
+                learning_level: "स्तर 2: टिकाऊ किसान",
+                get_tip: "✨ टिकाऊ टिप प्राप्त करें",
+                get_tip_loading: "✨ टिप बना रहा है...",
+                get_quiz: "✨ दैनिक क्विज प्राप्त करें",
+                quiz_correct: "✅ सही है!",
+                quiz_incorrect: "❌ गलत है। फिर से प्रयास करें!",
+                nav_home: "होम",
+                nav_advisory: "सलाह",
+                nav_aitools: "एआई उपकरण",
+                nav_tools: "उपकरण",
+                nav_voice: "वॉयस",
+                nav_community: "समुदाय"
+            },
+            te: {
+                app_title: "కిసాన్ సాథి",
+                home_section: "",
+                home_welcome: "నమస్తే, రైతు గారు!",
+                home_today_updates: "ఈ రోజు మీ తాజా సమాచారం ఇక్కడ ఉంది.",
+                climate_title: "🌦 పర్యావరణం మరియు వాతావరణం",
+                weather_label: "వాతావరణం",
+                humidity_label: "తేమ",
+                wind_label: "గాలి",
+                alerts_drought: "మీ ప్రాంతంలో కరువు హెచ్చరిక. నీటి ఆదా చర్యలను అమలు చేయండి.",
+                market_title: "📉 ఆర్థిక మరియు మార్కెట్ అంతర్దృష్టులు",
+                market_forecast: "AI అంచనా: వచ్చే నెలలో పత్తి ధరలు 5-8% పెరిగే అవకాశం ఉంది.",
+                get_market_analysis: "✨ ప్రత్యక్ష మార్కెట్ విశ్లేషణను పొందండి",
+                crop_rice: "బియ్యం (క్వింటాల్‌కు)",
+                crop_wheat: "గోధుమలు (క్వింటాల్‌కు)",
+                crop_cotton: "పత్తి (క్వింటాల్‌కు)",
+                advisory_section: "",
+                advisory_title: "🌱 పంట సలహా",
+                advisory_form_title: "వ్యక్తిగత ప్రణాళికను పొందండి",
+                form_label_soil: "నేల రకం",
+                form_label_crop: "కావాల్సిన పంట",
+                form_button_submit: "✨ సలహా పొందండి",
+                result_heading: "మీ పంటకు సిఫార్సులు:",
+                aitools_section: "",
+                aitools_title: "🧠 AI ఉపకరణాలు మరియు AR వీక్షణ",
+                pests_title: "AI చీడ మరియు వ్యాధి గుర్తింపు",
+                pests_instruction: "బాధిత ఆకు లేదా మొక్క యొక్క స్పష్టమైన ఫోటోను అప్‌లోడ్ చేయండి.",
+                pests_button_upload: "✨ అప్‌లోడ్ చేసి స్కాన్ చేయండి",
+                detection_heading: "గుర్తింపు ఫలితం:",
+                ar_guidance: "AR మార్గదర్శకం",
+                ar_info: "AR-ఆధారిత అప్లికేషన్ మార్గదర్శకం కోసం మీ ఫోన్ కెమెరాను మొక్క వైపు చూపండి.",
+                ar_action_button: "AR వీక్షణను ప్రారంభించండి",
+                voice_section: "",
+                voice_title: "🗣 వాయిస్ సహాయకుడు",
+                voice_instruction: "మైక్రోఫోన్‌పై నొక్కండి మరియు మీ భాషలో మీ వ్యవసాయ ప్రశ్నను అడగండి.",
+                voice_status_ready: "మాట్లాడటానికి నొక్కండి",
+                voice_status_listening: "✨ వినబడుతోంది...",
+                voice_status_generating: "✨ ప్రతిస్పందనను సృష్టిస్తోంది...",
+                voice_status_speaking: "✨ ఆడియో ప్లే చేస్తోంది...",
+                community_section: "",
+                community_title: "💬 రైతు సంఘం",
+                post_input_placeholder: "మీ ఆలోచనలను పంచుకోండి...",
+                tools_section: "",
+                tools_title: "🚜 వ్యవసాయ ఉపకరణాలు మరియు ఆర్థికం",
+                marketplace_title: "సాధన మార్కెట్",
+                marketplace_desc: "మీ ప్రాంతంలోని ఇతర రైతుల నుండి ఆధునిక యంత్రాలను సరసమైన ధరలకు యాక్సెస్ చేయండి.",
+                tractor_rent: "ట్రాక్టర్ అద్దె",
+                harvester: "హార్వెస్టర్",
+                per_day: "రోజుకు",
+                browse_equipment: "సాధనాలను బ్రౌజ్ చేయండి",
+                finance_title: "💰 ఆర్థిక సలహాదారు",
+                finance_desc: "మన AI సాధనంతో వ్యవసాయ రుణాల కోసం మీ అర్హతను తక్షణమే తనిఖీ చేయండి.",
+                form_label_income: "వార్షిక ఆదాయం (₹)",
+                form_label_loan: "కావాల్సిన రుణ మొత్తం (₹)",
+                form_button_check: "✨ అర్హతను తనిఖీ చేయండి",
+                loan_result_heading: "రుణ అర్హత స్థితి:",
+                ai_reply: "AI నిపుణుడి సమాధానం",
+                get_ai_reply: "✨ AI నిపుణుడి సమాధానం పొందండి",
+                ai_expert_reply_initial_text: "AI నిపుణుడు సహాయం చేయడానికి సిద్ధంగా ఉన్నాడు. సమాధానం పొందడానికి పైన ఒక ప్రశ్నను పోస్ట్ చేయండి!",
+                ai_reply_loading: "✨ AI ప్రతిస్పందనను సిద్ధం చేస్తోంది...",
+                learning_title: "గేమిఫైడ్ లెర్నింగ్",
+                learning_progress: "వౌచర్లు మరియు బహుమతులు సంపాదించడానికి ట్యుటోరియల్‌లను పూర్తి చేయండి!",
+                learning_level: "స్థాయి 2: సుస్థిర రైతు",
+                get_tip: "✨ సుస్థిర చిట్కా పొందండి",
+                get_tip_loading: "✨ చిట్కాను సృష్టిస్తోంది...",
+                get_quiz: "✨ రోజువారీ క్విజ్ పొందండి",
+                quiz_correct: "✅ సరైనది!",
+                quiz_incorrect: "❌ తప్పు. మళ్ళీ ప్రయత్నించండి!",
+                nav_home: "హోమ్",
+                nav_advisory: "సలహా",
+                nav_aitools: "ఎఐ ఉపకరణాలు",
+                nav_tools: "ఉపకరణాలు",
+                nav_voice: "వాయిస్",
+                nav_community: "సంఘం"
+            }
+        };
+        
+        // Function to create a message box, replacing alert()
+        function showMessageBox(message) {
+            const messageBox = document.createElement('div');
+            messageBox.id = 'message-box';
+            messageBox.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
+            messageBox.innerHTML = `
+                <div class="bg-gray-800 p-6 rounded-2xl shadow-xl max-w-sm w-full border border-gray-700 text-center">
+                    <p class="text-white text-lg mb-4">${message}</p>
+                    <button onclick="document.getElementById('message-box').remove()" class="btn-futuristic border border-emerald-400">
+                        OK
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(messageBox);
+        }
+
+        // --- AR View Three.js logic ---
+        let scene, camera, renderer, plant;
+
+        function initARView(canvas) {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+            
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            directionalLight.position.set(0, 1, 1);
+            scene.add(directionalLight);
+
+            // Simple plant model
+            const stemGeometry = new THREE.CylinderGeometry(0.05, 0.05, 2, 32);
+            const stemMaterial = new THREE.MeshLambertMaterial({ color: 0x228B22 });
+            const stem = new THREE.Mesh(stemGeometry, stemMaterial);
+            stem.position.y = 0;
+
+            const leafGeometry = new THREE.DodecahedronGeometry(0.3);
+            const leafMaterial = new THREE.MeshLambertMaterial({ color: 0x32CD32 });
+            const leaf1 = new THREE.Mesh(leafGeometry, leafMaterial);
+            leaf1.position.set(0.5, 0.8, 0.5);
+            const leaf2 = new THREE.Mesh(leafGeometry, leafMaterial);
+            leaf2.position.set(-0.5, 1.2, -0.5);
+            const leaf3 = new THREE.Mesh(leafGeometry, leafMaterial);
+            leaf3.position.set(0, 1.5, 0.5);
+            plant = new THREE.Group();
+            plant.add(stem, leaf1, leaf2, leaf3);
+            scene.add(plant);
+
+            camera.position.z = 5;
+        }
+
+        function animateARView() {
+            requestAnimationFrame(animateARView);
+            if (plant) {
+                plant.rotation.y += 0.01;
+            }
+            if(renderer) {
+               renderer.render(scene, camera);
+            }
+        }
+        
+        function resizeARCanvas() {
+            if (renderer && camera) {
+                const arCanvasContainer = document.getElementById('ar-canvas-container');
+                const width = arCanvasContainer.clientWidth;
+                const height = arCanvasContainer.clientHeight;
+                renderer.setSize(width, height);
+                camera.aspect = width / height;
+                camera.updateProjectionMatrix();
+            }
+        }
+        
+        window.onload = () => {
+            const tabs = document.querySelectorAll('.nav-icon');
+            const sections = document.querySelectorAll('.tab-content');
+            const langSelector = document.getElementById('language-selector');
+
+            const advisoryForm = document.getElementById('advisory-form');
+            const advisoryResult = document.getElementById('advisory-result');
+            const resultText = document.getElementById('result-text');
+            const advisorySpinner = document.getElementById('advisory-spinner');
+            
+            const pestUpload = document.getElementById('pest-upload');
+            const pestPreview = document.getElementById('pest-preview');
+            const pestResult = document.getElementById('pest-result');
+            const detectionText = document.getElementById('detection-text');
+            
+            const arButton = document.getElementById('ar-button');
+            const arCanvasContainer = document.getElementById('ar-canvas-container');
+            const arCanvas = document.getElementById('ar-canvas');
+            
+            const voiceButton = document.getElementById('voice-button');
+            const voiceSpinner = document.getElementById('voice-spinner');
+            const voiceStatus = document.getElementById('voice-status');
+            const ttsAudio = document.getElementById('tts-audio');
+            
+            const postForm = document.getElementById('post-form');
+            const postInput = document.getElementById('post-input');
+            const communityPostsContainer = document.getElementById('community-posts');
+            const aiReplyButton = document.getElementById('ai-reply-button');
+            const aiReplyText = document.getElementById('community-reply-text');
+            const aiReplySpinner = document.getElementById('ai-reply-spinner');
+            
+            const geminiTipButton = document.getElementById('gemini-tip-button');
+            const geminiTipText = document.getElementById('gemini-tip-text');
+            const geminiTipSpinner = document.getElementById('gemini-tip-spinner');
+            
+            const loanForm = document.getElementById('loan-form');
+            const loanResultDiv = document.getElementById('loan-result');
+            const loanResultText = document.getElementById('loan-text');
+            const loanSpinner = document.getElementById('loan-spinner');
+
+            const getMarketAnalysisButton = document.getElementById('get-market-analysis-button');
+            const marketForecastText = document.getElementById('market-forecast-text');
+            const marketAnalysisSpinner = document.getElementById('market-analysis-spinner');
+
+            const getQuizButton = document.getElementById('get-quiz-button');
+            const quizArea = document.getElementById('quiz-area');
+            const quizQuestionEl = document.getElementById('quiz-question');
+            const quizOptionsEl = document.getElementById('quiz-options');
+            const quizResultEl = document.getElementById('quiz-result');
+            const quizSpinner = document.getElementById('quiz-spinner');
+            const bottomNav = document.getElementById('bottom-nav');
+
+             // --- Tone.js Sound Synthesis ---
+            let synth;
+            function initializeSynth() {
+                // Initialize synth only once
+                if (!synth && typeof Tone !== 'undefined') {
+                    synth = new Tone.Synth().toDestination();
+                } else if (typeof Tone === 'undefined') {
+                    console.warn("Audio features could not be loaded.");
+                }
+            }
+            
+            function playStartSound() {
+                initializeSynth();
+                // Ensure audio context is running and synth is initialized
+                if (synth && Tone.context.state !== 'running') {
+                    Tone.context.resume();
+                }
+                 if (synth) {
+                    const now = Tone.now();
+                    synth.triggerAttackRelease("C5", "8n", now);
+                    synth.triggerAttackRelease("E5", "8n", now + 0.15);
+                }
+            }
+
+            function playEndSound() {
+                initializeSynth();
+                if (synth && Tone.context.state !== 'running') {
+                    Tone.context.resume();
+                }
+                if (synth) {
+                    const now = Tone.now();
+                    synth.triggerAttackRelease("E5", "8n", now);
+                    synth.triggerAttackRelease("C5", "8n", now + 0.15);
+                }
+            }
+
+
+            // --- LLM API Constants and Functions ---
+            const API_KEY = "AIzaSyCKRtNQFxMaD9bJsA1r5D1Kj6AELyWacvU";
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
+            const TTS_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${API_KEY}`;
+            const TTS_VOICE = "Kore";
+            
+            async function callGeminiAPI(prompt, images = [], showSpinner, textElement) {
+                if (API_KEY === "") {
+                    showMessageBox("Gemini API Key is missing. Please add it to the script to enable AI features.");
+                    if (showSpinner) showSpinner.classList.add('hidden');
+                    return "Error: API Key is missing.";
+                }
+                if (showSpinner) showSpinner.classList.remove('hidden');
+                
+                const parts = [{ text: prompt }];
+                if (images.length > 0) {
+                    images.forEach(img => {
+                        parts.push({ inlineData: { mimeType: "image/png", data: img } });
+                    });
+                }
+                const payload = {
+                    contents: [{ parts: parts }],
+                    tools: [{ "google_search": {} }],
+                };
+                
+                let retryCount = 0;
+                const maxRetries = 8;
+                while (retryCount < maxRetries) {
+                    try {
+                        const response = await fetch(API_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`API call failed with status: ${response.status}`);
+                        }
+                        
+                        const result = await response.json();
+                        const candidate = result.candidates?.[0];
+                        if (candidate && candidate.content?.parts?.[0]?.text) {
+                            if (showSpinner) showSpinner.classList.add('hidden');
+                            return candidate.content.parts[0].text;
+                        } else {
+                            throw new Error('Invalid API response structure');
+                        }
+                    } catch (error) {
+                        console.error(`Attempt ${retryCount + 1} failed:`, error);
+                        if (retryCount < maxRetries - 1) {
+                            const delay = Math.pow(2, retryCount) * 1000 + Math.random() * 100;
+                            await new Promise(res => setTimeout(res, delay));
+                            retryCount++;
+                        } else {
+                            if (showSpinner) showSpinner.classList.add('hidden');
+                            if (error.message.includes('503')) {
+                                showMessageBox("The AI service is temporarily unavailable. Please try again in a few moments.");
+                            } else {
+                                showMessageBox("Error: Could not get a response. Please check your network connection and API key.");
+                            }
+                            return "Error: Could not get a response after multiple retries.";
+                        }
+                    }
+                }
+                return "Error: Could not get a response after multiple retries.";
+            }
+
+            async function callGeminiAPIwithSchema(prompt, schema) {
+                if (API_KEY === "") {
+                    showMessageBox("Gemini API Key is missing. Please add it to the script.");
+                    return null;
+                }
+
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: schema
+                    }
+                };
+
+                let retryCount = 0;
+                const maxRetries = 8;
+                while (retryCount < maxRetries) {
+                    try {
+                        const response = await fetch(API_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`API call failed with status: ${response.status}`);
+                        }
+                        const result = await response.json();
+                        const jsonString = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                        return JSON.parse(jsonString);
+                    } catch (error) {
+                        console.error(`Attempt ${retryCount + 1} failed:`, error);
+                        if (retryCount < maxRetries - 1) {
+                            const delay = Math.pow(2, retryCount) * 1000 + Math.random() * 100;
+                            await new Promise(res => setTimeout(res, delay));
+                            retryCount++;
+                        } else {
+                            if (error.message.includes('503')) {
+                                showMessageBox("The AI service is temporarily unavailable. Please try again in a few moments.");
+                            } else {
+                                showMessageBox("Error: Could not get a structured response. Please try again.");
+                            }
+                            return null;
+                        }
+                    }
+                }
+                return null;
+            }
+
+            async function callGeminiTTS(text) {
+                if (API_KEY === "") {
+                    showMessageBox("Gemini API Key is missing. Please add it to the script.");
+                    return null;
+                }
+                const payload = {
+                    contents: [{ parts: [{ text: `Say in a clear, helpful tone: ${text}` }] }],
+                    generationConfig: {
+                        responseModalities: ["AUDIO"],
+                        speechConfig: {
+                            voiceConfig: {
+                                prebuiltVoiceConfig: { voiceName: TTS_VOICE }
+                            }
+                        }
+                    },
+                };
+                let retryCount = 0;
+                const maxRetries = 8;
+                while(retryCount < maxRetries) {
+                    try {
+                        const response = await fetch(TTS_API_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (!response.ok) {
+                             throw new Error(`TTS API call failed with status: ${response.status}`);
+                        }
+                        const result = await response.json();
+                        const part = result?.candidates?.[0]?.content?.parts?.[0];
+                        return part?.inlineData?.data;
+                    } catch (error) {
+                         console.error(`TTS Attempt ${retryCount + 1} failed:`, error);
+                         if (retryCount < maxRetries - 1) {
+                            const delay = Math.pow(2, retryCount) * 1000 + Math.random() * 100;
+                             await new Promise(res => setTimeout(res, delay));
+                             retryCount++;
+                         } else {
+                            if (error.message.includes('503')) {
+                                showMessageBox("The audio generation service is temporarily unavailable. Please try again in a few moments.");
+                            } else {
+                                showMessageBox("Error: Could not generate audio. Please check your network and API key.");
+                            }
+                             return null;
+                         }
+                    }
+                }
+                return null;
+            }
+            
+            function base64ToArrayBuffer(base64) {
+                const binaryString = window.atob(base64);
+                const len = binaryString.length;
+                const bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                return bytes.buffer;
+            }
+
+            function pcmToWav(pcmData, sampleRate = 24000) {
+                const pcm16 = new Int16Array(pcmData);
+                const dataLength = pcm16.length * 2;
+                const buffer = new ArrayBuffer(44 + dataLength);
+                const view = new DataView(buffer);
+
+                writeString(view, 0, 'RIFF');
+                view.setUint32(4, 36 + dataLength, true);
+                writeString(view, 8, 'WAVE');
+                writeString(view, 12, 'fmt ');
+                view.setUint32(16, 16, true);
+                view.setUint16(20, 1, true);
+                view.setUint16(22, 1, true);
+                view.setUint32(24, sampleRate, true);
+                view.setUint32(28, sampleRate * 2, true);
+                view.setUint16(32, 2, true);
+                view.setUint16(34, 16, true);
+                writeString(view, 36, 'data');
+                view.setUint32(40, dataLength, true);
+
+                let offset = 44;
+                for (let i = 0; i < pcm16.length; i++) {
+                    view.setInt16(offset, pcm16[i], true);
+                    offset += 2;
+                }
+
+                return new Blob([view], { type: 'audio/wav' });
+            }
+
+            function writeString(view, offset, string) {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            }
+
+            function updateLanguage(lang) {
+                document.querySelectorAll('[data-lang-key]').forEach(element => {
+                    const key = element.getAttribute('data-lang-key');
+                    if (translations[lang] && translations[lang][key]) {
+                        if (element.tagName === 'INPUT' && element.hasAttribute('placeholder')) {
+                            element.placeholder = translations[lang][key];
+                        } else {
+                            // Use innerHTML for buttons to keep the spinner span
+                            if (element.tagName === 'BUTTON' && element.querySelector('.spinner')) {
+                                const spinner = element.querySelector('.spinner');
+                                element.innerHTML = translations[lang][key];
+                                element.appendChild(spinner);
+                            } else {
+                                element.textContent = translations[lang][key];
+                            }
+                        }
+                    }
+                });
+            }
+            
+            updateLanguage(langSelector.value);
+            langSelector.addEventListener('change', (event) => updateLanguage(event.target.value));
+
+            bottomNav.addEventListener('click', (e) => {
+                const clickedTab = e.target.closest('.nav-icon');
+                if (!clickedTab) return;
+
+                e.preventDefault();
+
+                tabs.forEach(tab => tab.classList.remove('active'));
+                sections.forEach(section => section.classList.remove('active'));
+
+                clickedTab.classList.add('active');
+                const targetId = clickedTab.getAttribute('data-tab-name');
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
+            });
+
+            advisoryForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const soilType = document.getElementById('soil-type').value;
+                const cropType = document.getElementById('crop-type').value;
+                advisoryResult.style.display = 'block';
+                advisorySpinner.classList.remove('hidden');
+                resultText.textContent = translations[langSelector.value].voice_status_generating;
+                
+                const prompt = `Act as an agricultural expert for Indian farmers. Soil type: "${soilType}", Crop: "${cropType}". Provide a simple, actionable, bulleted list of 3-5 recommendations for soil prep, irrigation, and fertilizer. Keep it concise.`;
+                const response = await callGeminiAPI(prompt, [], advisorySpinner, resultText);
+                resultText.textContent = response || 'Could not get a response. Please try again.';
+            });
+
+            pestUpload.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = async function(e) {
+                        const base64Image = e.target.result.split(',')[1];
+                        pestPreview.src = e.target.result;
+                        pestPreview.classList.remove('hidden');
+                        pestResult.style.display = 'block';
+                        detectionText.textContent = translations[langSelector.value].get_tip_loading;
+                        
+                        const prompt = `As a plant disease expert, analyze this image. Identify the disease/pest, describe symptoms, and provide a simple treatment plan. If it's not a plant issue, say "Could not detect a plant disease."`;
+                        const response = await callGeminiAPI(prompt, [base64Image], null, detectionText);
+                        detectionText.textContent = response || 'Could not detect a plant disease.';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            arButton.addEventListener('click', () => {
+                arCanvasContainer.classList.remove('hidden');
+                if(!renderer) { // only init once
+                    initARView(arCanvas);
+                    animateARView();
+                }
+                resizeARCanvas();
+            });
+            window.addEventListener('resize', resizeARCanvas);
+            
+            let isListening = false;
+            let recognition;
+
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                
+                recognition.onstart = () => {
+                    playStartSound();
+                    isListening = true;
+                    voiceStatus.textContent = translations[langSelector.value].voice_status_listening;
+                    voiceButton.classList.add('voice-button-pulse');
+                    voiceSpinner.classList.remove('hidden');
+                };
+
+                recognition.onend = () => {
+                    isListening = false;
+                    voiceButton.classList.remove('voice-button-pulse');
+                    voiceSpinner.classList.add('hidden');
+                    if(voiceStatus.textContent === translations[langSelector.value].voice_status_listening){
+                         voiceStatus.textContent = translations[langSelector.value].voice_status_ready;
+                    }
+                };
+
+                recognition.onresult = async (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    const responseArea = document.getElementById('voice-response-area');
+                    const responseTextEl = document.getElementById('voice-response-text');
+                    
+                    voiceStatus.textContent = `You said: "${transcript}"`;
+                    voiceStatus.textContent = translations[langSelector.value].voice_status_generating;
+                    
+                    const prompt = `Act as a helpful farmer's assistant. A user asked: "${transcript}". Provide a concise and simple answer.`;
+                    const responseText = await callGeminiAPI(prompt, [], null, voiceStatus);
+                    
+                    responseArea.classList.remove('hidden');
+                    responseTextEl.textContent = responseText;
+                    
+                    if (responseText && !responseText.startsWith("Error:")) {
+                        voiceStatus.textContent = "Now, generating audio..."; // New status update
+                        const audioData = await callGeminiTTS(responseText);
+                        
+                        if (audioData) {
+                            voiceStatus.textContent = translations[langSelector.value].voice_status_speaking;
+                            const pcmData = base64ToArrayBuffer(audioData);
+                            const wavBlob = pcmToWav(pcmData);
+                            const audioUrl = URL.createObjectURL(wavBlob);
+                            ttsAudio.src = audioUrl;
+                            ttsAudio.play();
+                            ttsAudio.onended = () => {
+                                playEndSound();
+                                voiceStatus.textContent = translations[langSelector.value].voice_status_ready;
+                            };
+                        } else {
+                            voiceStatus.textContent = translations[langSelector.value].voice_status_ready;
+                            playEndSound();
+                        }
+                    } else {
+                         voiceStatus.textContent = translations[langSelector.value].voice_status_ready;
+                         playEndSound();
+                    }
+                };
+
+                 voiceButton.addEventListener('click', () => {
+                    if (typeof Tone !== 'undefined' && Tone.context.state !== 'running') {
+                        Tone.context.resume();
+                    }
+                    if (!isListening) {
+                        recognition.lang = langSelector.value === 'hi' ? 'hi-IN' : (langSelector.value === 'te' ? 'te-IN' : 'en-IN');
+                        recognition.start();
+                    } else {
+                        recognition.stop();
+                    }
+                });
+            } else {
+                voiceStatus.textContent = "Voice recognition not supported in this browser.";
+                voiceButton.disabled = true;
+            }
+            
+            postForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const postText = postInput.value.trim();
+                if (postText && userId) {
+                    try {
+                        await addDoc(collection(db, `/artifacts/${appId}/public/data/community-posts`), {
+                            text: postText,
+                            userId: userId,
+                            timestamp: serverTimestamp()
+                        });
+                        postInput.value = '';
+                    } catch (error) {
+                        console.error("Error adding document: ", error);
+                        showMessageBox("Could not send your message. Please try again.");
+                    }
+                }
+            });
+            
+            aiReplyButton.addEventListener('click', async () => {
+                const posts = Array.from(communityPostsContainer.children).map(child => child.innerText).join('\n');
+                if (posts.trim().length === 0) {
+                    showMessageBox("There are no posts to analyze yet.");
+                    return;
+                }
+                aiReplySpinner.classList.remove('hidden');
+                aiReplyText.textContent = translations[langSelector.value].ai_reply_loading;
+
+                const prompt = `Act as an agricultural expert. Below is a conversation between farmers. Provide a helpful, concise response to the latest questions or topics. If no question, offer a relevant tip.\n\nConversation:\n${posts}`;
+                const response = await callGeminiAPI(prompt, [], aiReplySpinner, aiReplyText);
+                aiReplyText.textContent = response || "Could not generate a reply.";
+            });
+
+            geminiTipButton.addEventListener('click', async () => {
+                geminiTipText.classList.remove('hidden');
+                geminiTipSpinner.classList.remove('hidden');
+                geminiTipText.textContent = translations[langSelector.value].get_tip_loading;
+
+                const prompt = "Provide a single, short, and actionable sustainable farming tip for a small-scale farmer in India.";
+                const response = await callGeminiAPI(prompt, [], geminiTipSpinner, geminiTipText);
+                geminiTipText.textContent = response || "Could not get a tip. Please try again.";
+            });
+            
+            loanForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const annualIncome = document.getElementById('annual-income').value;
+                const loanAmount = document.getElementById('loan-amount').value;
+                
+                loanResultDiv.style.display = 'block';
+                loanSpinner.classList.remove('hidden');
+                loanResultText.textContent = 'Checking...';
+
+                const selectedLang = langSelector.value;
+                const langMap = {
+                    en: 'English',
+                    hi: 'Hindi',
+                    te: 'Telugu'
+                };
+                const responseLang = langMap[selectedLang] || 'English';
+
+                const prompt = `As an AI financial advisor for farmers, determine if a farmer with an annual income of INR ${annualIncome} is eligible for a loan of INR ${loanAmount}. State "Eligible" or "Not Eligible" and provide a very brief one-sentence explanation. Assume standard Indian agricultural loan criteria. IMPORTANT: The entire response must be in the ${responseLang} language.`;
+                const response = await callGeminiAPI(prompt, [], loanSpinner, loanResultText);
+                loanResultText.textContent = response || "Could not determine eligibility.";
+            });
+            
+            getMarketAnalysisButton.addEventListener('click', async () => {
+                marketAnalysisSpinner.classList.remove('hidden');
+                marketForecastText.textContent = 'Fetching live analysis...';
+
+                const selectedLang = langSelector.value;
+                const langMap = {
+                    en: 'English',
+                    hi: 'Hindi',
+                    te: 'Telugu'
+                };
+                const responseLang = langMap[selectedLang] || 'English';
+
+                const prompt = `Provide a brief, real-time market analysis for rice, wheat, and cotton in Andhra Pradesh, India. Mention current price trends and a short-term forecast in one paragraph. IMPORTANT: The entire response must be in the ${responseLang} language.`;
+                const response = await callGeminiAPI(prompt, [], marketAnalysisSpinner, marketForecastText);
+                marketForecastText.textContent = response || "Could not fetch market analysis.";
+            });
+
+            getQuizButton.addEventListener('click', async () => {
+                quizSpinner.classList.remove('hidden');
+                quizArea.classList.add('hidden');
+
+                const quizSchema = {
+                    type: "OBJECT",
+                    properties: {
+                        "question": { "type": "STRING" },
+                        "options": { "type": "ARRAY", "items": { "type": "STRING" } },
+                        "answer": { "type": "STRING" }
+                    },
+                    required: ["question", "options", "answer"]
+                };
+
+                const prompt = "Generate a single multiple-choice question about sustainable farming practices suitable for Indian farmers. The question should have 4 options. Ensure one of the options is the correct answer provided in the 'answer' field.";
+                const quizData = await callGeminiAPIwithSchema(prompt, quizSchema);
+
+                quizSpinner.classList.add('hidden');
+                if (quizData && quizData.question) {
+                    displayQuiz(quizData);
+                } else {
+                    quizQuestionEl.textContent = "Could not load quiz. Please try again.";
+                }
+            });
+
+            function displayQuiz(quiz) {
+                quizArea.classList.remove('hidden');
+                quizQuestionEl.textContent = quiz.question;
+                quizOptionsEl.innerHTML = '';
+                quizResultEl.classList.add('hidden');
+
+                quiz.options.forEach(optionText => {
+                    const optionButton = document.createElement('button');
+                    optionButton.textContent = optionText;
+                    optionButton.className = "w-full text-left p-2 rounded-lg bg-gray-700 hover:bg-cyan-700 transition-colors duration-200";
+                    optionButton.onclick = () => {
+                        quizResultEl.classList.remove('hidden');
+                        if (optionText === quiz.answer) {
+                            quizResultEl.textContent = translations[langSelector.value].quiz_correct;
+                            quizResultEl.className = 'mt-2 text-sm font-semibold text-green-400';
+                        } else {
+                            quizResultEl.textContent = translations[langSelector.value].quiz_incorrect;
+                            quizResultEl.className = 'mt-2 text-sm font-semibold text-red-400';
+                        }
+                        Array.from(quizOptionsEl.children).forEach(btn => btn.disabled = true);
+                    };
+                    quizOptionsEl.appendChild(optionButton);
+                });
+            }
+        };
+    </script>
+</body>
+</html>
+
