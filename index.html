@@ -128,11 +128,43 @@
             height: 100%;
             background-color: transparent;
         }
+        .sub-nav-btn {
+            @apply flex-1 text-center py-2 rounded-full font-semibold transition-colors duration-200 text-neon-emerald;
+        }
+        .sub-nav-btn:hover {
+            @apply text-neon-cyan;
+        }
+        .sub-nav-btn.active {
+            @apply bg-gray-700 text-neon-cyan;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-gray-900 to-black text-gray-200">
 
-    <div class="container mx-auto p-4 flex flex-col min-h-screen">
+    <div id="auth-page" class="container mx-auto p-4 flex flex-col justify-center items-center min-h-screen">
+        <div class="glass-card text-center max-w-sm w-full">
+            <h1 class="text-3xl font-bold font-['Orbitron'] text-neon-cyan mb-4">Kisaan Saathi</h1>
+            <p class="text-gray-400 mb-6">Your Agri-Tech Ecosystem</p>
+            <form id="auth-form" class="space-y-4">
+                <input type="email" id="auth-email" class="input-futuristic" placeholder="Email Address" required>
+                <input type="password" id="auth-password" class="input-futuristic" placeholder="Password" required>
+                <div class="flex flex-col space-y-2">
+                    <button type="submit" id="auth-login-button" class="w-full btn-futuristic border border-emerald-400">
+                        Sign In
+                    </button>
+                    <button type="button" id="auth-signup-button" class="w-full btn-futuristic border border-cyan-400">
+                        Sign Up
+                    </button>
+                    <button type="button" id="auth-anonymous-button" class="w-full btn-futuristic border border-gray-600">
+                        Continue as Guest
+                    </button>
+                </div>
+            </form>
+            <div id="auth-error-message" class="mt-4 text-red-400 font-semibold hidden"></div>
+        </div>
+    </div>
+
+    <div id="main-app" class="container mx-auto p-4 flex flex-col min-h-screen hidden">
         <!-- Header with Language Selector -->
         <header class="flex justify-between items-center py-4">
             <h1 class="text-3xl font-bold text-white font-['Orbitron']" id="app-title">Kisaan Saathi</h1>
@@ -159,46 +191,47 @@
                     <h3 class="text-lg font-bold mb-4 text-neon-emerald" data-lang-key="climate_title">🌦 Environmental & Climate</h3>
                     <div class="flex items-center justify-between mb-4">
                         <div class="flex items-center space-x-3">
-                            <span class="text-3xl" role="img" aria-label="sun">☀️</span>
+                            <div class="text-3xl" id="weather-icon"></div>
                             <div class="flex flex-col">
                                 <span class="text-xs font-medium text-gray-400" data-lang-key="weather_label">Weather</span>
-                                <span class="text-2xl font-bold text-white" id="weather-temp">34°C</span>
+                                <span class="text-2xl font-bold text-white" id="weather-temp">...</span>
                             </div>
                         </div>
                         <div class="text-right">
-                            <span class="text-sm text-gray-400" id="weather-desc">Sunny</span>
+                            <span class="text-sm text-gray-400" id="weather-desc">...</span>
+                            <p class="text-xs text-gray-500" id="city-name"></p>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-4 text-center text-sm font-medium">
                         <div class="p-3 bg-gray-800 rounded-lg border border-gray-700">
                             <span class="block text-xs text-gray-500" data-lang-key="humidity_label">Humidity</span>
-                            <span class="block font-semibold text-gray-200">72%</span>
+                            <span class="block font-semibold text-gray-200" id="weather-humidity">...</span>
                         </div>
                         <div class="p-3 bg-gray-800 rounded-lg border border-gray-700">
                             <span class="block text-xs text-gray-500" data-lang-key="wind_label">Wind</span>
-                            <span class="block font-semibold text-gray-200">12 km/h</span>
+                            <span class="block font-semibold text-gray-200" id="weather-wind">...</span>
                         </div>
                     </div>
-                    <div class="bg-red-900 bg-opacity-30 p-4 rounded-xl border border-red-500 mt-4">
-                        <p class="text-sm text-red-300 font-medium" data-lang-key="alerts_drought">Heatwave warning for your region. Ensure proper irrigation.</p>
+                    <div class="bg-red-900 bg-opacity-30 p-4 rounded-xl border border-red-500 mt-4 hidden" id="weather-alert-card">
+                        <p class="text-sm text-red-300 font-medium" id="weather-alert-text"></p>
                     </div>
                 </div>
                 
                 <!-- Economic & Market Card -->
                 <div class="glass-card">
                     <h3 class="text-lg font-bold mb-4 text-neon-cyan" data-lang-key="market_title">📉 Economic & Market Insights</h3>
-                    <div class="space-y-4">
+                    <div class="space-y-4" id="market-data-container">
                         <div class="flex justify-between items-center text-sm">
                             <span class="font-medium text-gray-300" data-lang-key="crop_rice">Rice (Per Quintal)</span>
-                            <span class="font-bold text-green-400">₹ 3,500</span>
+                            <span class="font-bold text-green-400" id="price-rice">...</span>
                         </div>
                         <div class="flex justify-between items-center text-sm">
                             <span class="font-medium text-gray-300" data-lang-key="crop_wheat">Wheat (Per Quintal)</span>
-                            <span class="font-bold text-green-400">₹ 2,800</span>
+                            <span class="font-bold text-green-400" id="price-wheat">...</span>
                         </div>
-                        <div class="flex justify-between items-center text-sm">
+                        <div class="flex items-center justify-between text-sm">
                             <span class="font-medium text-gray-300" data-lang-key="crop_cotton">Cotton (Per Quintal)</span>
-                            <span class="font-bold text-green-400">₹ 6,200</span>
+                            <span class="font-bold text-green-400" id="price-cotton">...</span>
                         </div>
                     </div>
                     <p class="text-sm text-gray-400 mt-4" id="market-forecast-text" data-lang-key="market_forecast">AI forecast: Cotton prices are expected to rise by 5-8% next month.</p>
@@ -272,12 +305,20 @@
                 <h2 class="text-2xl font-bold mb-4 font-['Orbitron'] text-neon-cyan" data-lang-key="voice_title">🗣 Voice Assistant</h2>
                 <div class="glass-card text-center">
                     <p class="text-gray-400 mb-4 text-sm" data-lang-key="voice_instruction">Tap the microphone and ask your farming question in your language.</p>
-                    <button id="voice-button" class="bg-gray-800 p-8 rounded-full shadow-lg border border-gray-700 hover:border-emerald-400 transition-all duration-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a4 4 0 110-8 4 4 0 010 8z" />
-                        </svg>
-                        <span id="voice-spinner" class="spinner hidden"></span>
-                    </button>
+                    <div class="flex justify-center space-x-4">
+                        <button id="voice-button" class="bg-gray-800 p-8 rounded-full shadow-lg border border-gray-700 hover:border-emerald-400 transition-all duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a4 4 0 110-8 4 4 0 010 8z" />
+                            </svg>
+                            <span id="voice-spinner" class="spinner hidden"></span>
+                        </button>
+                        <button id="voice-stop-button" class="bg-gray-800 p-8 rounded-full shadow-lg border border-gray-700 hover:border-red-400 transition-all duration-300 hidden">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" />
+                            </svg>
+                        </button>
+                    </div>
                     <p id="voice-status" class="mt-4 text-sm font-semibold text-gray-400" data-lang-key="voice_status_ready">Tap to speak</p>
                     <div id="voice-response-area" class="mt-4 p-4 bg-gray-800 rounded-xl text-left hidden">
                         <p id="voice-response-text" class="text-sm text-gray-200 whitespace-pre-wrap"></p>
@@ -288,7 +329,7 @@
 
             <!-- Community Tab -->
             <section id="community" class="tab-content relative" data-lang-key="community_section">
-                 <!-- New Overlay for Auth Error -->
+                <!-- New Overlay for Auth Error -->
                 <div id="community-auth-error" class="absolute inset-0 bg-gray-900 bg-opacity-90 z-10 flex-col items-center justify-center p-4 text-center hidden">
                     <h3 class="text-xl font-bold text-red-400 mb-2">Authentication Failed</h3>
                     <p class="text-gray-300">To use the community chat, you need to enable Anonymous sign-in in your Firebase project.</p>
@@ -352,8 +393,138 @@
             </section>
 
             <!-- New Tools & Finance Tab -->
-            <section id="tools" class="tab-content">
+            <section id="tools" class="tab-content" data-lang-key="tools_section">
                 <h2 class="text-2xl font-bold mb-4 font-['Orbitron'] text-neon-cyan" data-lang-key="tools_title">🚜 Farming Tools & Finance</h2>
+                
+                <!-- Sub-navigation for tools -->
+                <nav class="flex space-x-2 p-2 bg-gray-800 rounded-full mb-6 text-sm">
+                    <button class="sub-nav-btn active" data-sub-tab="crop-calendar">Crop Calendar</button>
+                    <button class="sub-nav-btn" data-sub-tab="pest-control">Pest Control</button>
+                    <button class="sub-nav-btn" data-sub-tab="fertilizer">Fertilizer</button>
+                    <button class="sub-nav-btn" data-sub-tab="water-usage">Water Usage</button>
+                </nav>
+                
+                <!-- Sub-tab content containers -->
+                <div id="crop-calendar" class="sub-tab-content active">
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- January -->
+                        <div class="glass-card !p-4">
+                            <h4 class="font-semibold text-neon-emerald mb-2">January</h4>
+                            <p class="text-sm text-gray-400 mb-2">Rabi Season</p>
+                            <ul class="text-sm space-y-1">
+                                <li>🌾 Wheat</li>
+                                <li>🌱 Mustard</li>
+                                <li>🟢 Peas</li>
+                            </ul>
+                        </div>
+                        <!-- February -->
+                        <div class="glass-card !p-4">
+                            <h4 class="font-semibold text-neon-emerald mb-2">February</h4>
+                            <p class="text-sm text-gray-400 mb-2">Rabi Season</p>
+                            <ul class="text-sm space-y-1">
+                                <li>🍅 Tomato</li>
+                                <li>🧅 Onion</li>
+                                <li>🧄 Garlic</li>
+                            </ul>
+                        </div>
+                        <!-- March -->
+                        <div class="glass-card !p-4">
+                            <h4 class="font-semibold text-neon-emerald mb-2">March</h4>
+                            <p class="text-sm text-gray-400 mb-2">Summer Season</p>
+                            <ul class="text-sm space-y-1">
+                                <li>🍉 Watermelon</li>
+                                <li>🥒 Cucumber</li>
+                                <li>🌶️ Bitter Gourd</li>
+                            </ul>
+                        </div>
+                        <!-- April -->
+                        <div class="glass-card !p-4">
+                            <h4 class="font-semibold text-neon-emerald mb-2">April</h4>
+                            <p class="text-sm text-gray-400 mb-2">Summer Season</p>
+                            <ul class="text-sm space-y-1">
+                                <li>🧶 Cotton</li>
+                                <li>🥜 Groundnut</li>
+                                <li>🌱 Sesame</li>
+                            </ul>
+                        </div>
+                        <!-- May -->
+                        <div class="glass-card !p-4">
+                            <h4 class="font-semibold text-neon-emerald mb-2">May</h4>
+                            <p class="text-sm text-gray-400 mb-2">Summer Season</p>
+                            <ul class="text-sm space-y-1">
+                                <li>🥒 Okra</li>
+                                <li>🍆 Brinjal</li>
+                                <li>🌶️ Chilli</li>
+                            </ul>
+                        </div>
+                        <!-- June -->
+                        <div class="glass-card !p-4">
+                            <h4 class="font-semibold text-neon-emerald mb-2">June</h4>
+                            <p class="text-sm text-gray-400 mb-2">Kharif Season</p>
+                            <ul class="text-sm space-y-1">
+                                <li>🍚 Rice</li>
+                                <li>🌽 Maize</li>
+                                <li>🌿 Sugarcane</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="pest-control" class="sub-tab-content hidden">
+                    <div class="glass-card">
+                        <h3 class="text-lg font-semibold mb-4 text-neon-emerald">Pest Control Methods</h3>
+                        <p class="text-sm text-gray-400 mb-2">Choose a method to learn more.</p>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-gray-800 rounded-lg border border-gray-700">
+                                <h4 class="font-medium text-gray-200">Integrated Pest Management (IPM)</h4>
+                                <p class="text-xs text-gray-500 mt-1">A holistic approach to minimize risks.</p>
+                            </div>
+                            <div class="p-4 bg-gray-800 rounded-lg border border-gray-700">
+                                <h4 class="font-medium text-gray-200">Natural & Biological Control</h4>
+                                <p class="text-xs text-gray-500 mt-1">Using beneficial insects and organisms.</p>
+                            </div>
+                            <div class="p-4 bg-gray-800 rounded-lg border border-gray-700">
+                                <h4 class="font-medium text-gray-200">Chemical Control</h4>
+                                <p class="text-xs text-gray-500 mt-1">Guidance on safe and effective pesticide use.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="fertilizer" class="sub-tab-content hidden">
+                    <div class="glass-card">
+                        <h3 class="text-lg font-semibold mb-4 text-neon-emerald">Fertilizer Calculator</h3>
+                        <p class="text-sm text-gray-400 mb-2">Calculate the right amount of fertilizer for your field.</p>
+                        <form class="space-y-4">
+                            <div>
+                                <label for="field-size" class="block text-sm font-medium text-gray-400 mb-1">Field Size (acres)</label>
+                                <input type="number" id="field-size" class="input-futuristic" placeholder="e.g., 5" required>
+                            </div>
+                            <button type="submit" class="w-full btn-futuristic border border-emerald-400">Calculate</button>
+                        </form>
+                        <div class="mt-4 p-4 bg-gray-800 rounded-xl hidden" id="fertilizer-result">
+                            <h4 class="font-semibold text-neon-cyan mb-2">Recommendation:</h4>
+                            <p class="text-sm">For 5 acres of land, you need approximately 150 kg of Urea and 100 kg of DAP.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="water-usage" class="sub-tab-content hidden">
+                    <div class="glass-card">
+                        <h3 class="text-lg font-semibold mb-4 text-neon-emerald">Water Usage Planner</h3>
+                        <p class="text-sm text-gray-400 mb-2">Optimize your irrigation schedule based on weather and crop needs.</p>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-gray-800 rounded-lg border border-gray-700">
+                                <h4 class="font-medium text-gray-200">Next Irrigation (Based on forecast)</h4>
+                                <p class="text-sm font-semibold text-emerald-400 mt-1">Scheduled for tomorrow morning at 6:00 AM.</p>
+                            </div>
+                            <div class="p-4 bg-gray-800 rounded-lg border border-gray-700">
+                                <h4 class="font-medium text-gray-200">Water Savings (last week)</h4>
+                                <p class="text-sm font-semibold text-cyan-400 mt-1">You saved 2,500 liters by following AI recommendations!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
                 <!-- Shared Equipment Marketplace Card -->
                 <div class="glass-card">
@@ -411,7 +582,7 @@
         </main>
 
         <!-- Bottom Navigation Bar -->
-        <nav id="bottom-nav" class="sticky bottom-0 left-0 right-0 bg-gray-900 bg-opacity-80 p-2 border-t border-gray-700 backdrop-blur-sm rounded-t-3xl shadow-2xl z-20">
+        <nav id="bottom-nav" class="sticky bottom-0 left-0 right-0 bg-gray-900 bg-opacity-80 p-2 border-t border-gray-700 backdrop-blur-sm rounded-t-3xl shadow-2xl hidden">
             <div class="flex justify-around">
                 <a class="nav-icon active" data-tab-name="home">
                     <span class="text-2xl icon-span">🏠</span>
@@ -445,20 +616,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.min.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, addDoc, onSnapshot, collection, serverTimestamp, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js';
 
         // --- Firebase and User Auth Setup ---
-        const firebaseConfig = {
-          apiKey: "AIzaSyCOxvKDXNfSBDzviRIAksB86WSsYvOR7lU",
-          authDomain: "kisaan-saathi-1e6a4.firebaseapp.com",
-          projectId: "kisaan-saathi-1e6a4",
-          storageBucket: "kisaan-saathi-1e6a4.appspot.com",
-          messagingSenderId: "348707909501",
-          appId: "1:348707909501:web:52747da8154c2dfe49a614"
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyCOxvKDXNfSBDzviRIAksB86WSsYvOR7lU",
+            authDomain: "kisaan-saathi-1e6a4.firebaseapp.com",
+            projectId: "kisaan-saathi-1e6a4",
+            storageBucket: "kisaan-saathi-1e6a4.appspot.com",
+            messagingSenderId: "348707909501",
+            appId: "1:348707909501:web:52747da8154c2dfe49a614"
         };
-        const appId = firebaseConfig.appId;
         
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -466,12 +637,28 @@
         let userId;
         let communityListenerUnsubscribe = null;
 
-        // Simplified Authentication Handler
+        // UI Elements
+        const authPage = document.getElementById('auth-page');
+        const mainApp = document.getElementById('main-app');
+        const bottomNav = document.getElementById('bottom-nav');
+        const authForm = document.getElementById('auth-form');
+        const authEmail = document.getElementById('auth-email');
+        const authPassword = document.getElementById('auth-password');
+        const authLoginButton = document.getElementById('auth-login-button');
+        const authSignupButton = document.getElementById('auth-signup-button');
+        const authAnonymousButton = document.getElementById('auth-anonymous-button');
+        const authErrorMessage = document.getElementById('auth-error-message');
+        const communityAuthError = document.getElementById('community-auth-error');
+
+        // Authentication State Listener
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 // User is signed in.
                 userId = user.uid;
-                const communityAuthError = document.getElementById('community-auth-error');
+                authPage.classList.add('hidden');
+                mainApp.classList.remove('hidden');
+                bottomNav.classList.remove('hidden');
+
                 if (communityAuthError) {
                     communityAuthError.classList.add('hidden');
                     communityAuthError.classList.remove('flex');
@@ -482,7 +669,6 @@
                     userIdDisplay.textContent = `User ID: ${userId}`;
                 }
 
-                // Initialize Firestore listener only once after authentication is successful.
                 if (!communityListenerUnsubscribe) {
                     const communityPostsContainer = document.getElementById('community-posts');
                     const postsCollection = collection(db, `/artifacts/${appId}/public/data/community-posts`);
@@ -500,7 +686,7 @@
                                 postElement.className = `p-3 rounded-xl max-w-xs ${isCurrentUser ? 'bg-cyan-800 self-end ml-auto' : 'bg-gray-700 self-start'}`;
                                 postElement.innerHTML = `
                                     <p class="text-sm">${post.text}</p>
-                                    <p class="text-xs text-gray-400 mt-1 text-right">${isCurrentUser ? 'You' : `User: ${post.userId.substring(0, 6)}...`}</p>
+                                    <p class="text-xs text-gray-400 mt-1 text-right">${isCurrentUser ? 'You' : `User: ${post.userId}`}</p>
                                 `;
                                 communityPostsContainer.appendChild(postElement);
                             });
@@ -512,27 +698,58 @@
                     });
                 }
             } else {
-                // User is signed out. Attempt to sign in anonymously.
-                try {
-                    await signInAnonymously(auth);
-                    // The onAuthStateChanged listener will be called again with the new user,
-                    // so no further action is needed here.
-                } catch (error) {
-                    console.error("Anonymous sign-in failed:", error);
-                    // In Firebase v9+, the error code for disabled provider is 'auth/operation-not-allowed'.
-                    if (error.code === 'auth/operation-not-allowed') {
-                        const communityAuthError = document.getElementById('community-auth-error');
-                        if (communityAuthError) {
-                            communityAuthError.classList.remove('hidden');
-                            communityAuthError.classList.add('flex');
-                        }
-                    } else {
-                        showMessageBox("An unknown authentication error occurred. Please check the console.");
-                    }
-                }
+                // User is signed out. Show auth page.
+                authPage.classList.remove('hidden');
+                mainApp.classList.add('hidden');
+                bottomNav.classList.add('hidden');
             }
         });
         
+        // Auth Event Listeners
+        authAnonymousButton.addEventListener('click', async () => {
+                try {
+                    await signInAnonymously(auth);
+                } catch (error) {
+                    console.error("Anonymous sign-in failed:", error);
+                    if (error.code === 'auth/operation-not-allowed') {
+                        authErrorMessage.textContent = "Anonymous sign-in is not enabled. Please enable it in Firebase Authentication.";
+                        authErrorMessage.classList.remove('hidden');
+                    } else {
+                        showMessageBox("An unknown authentication error occurred.");
+                    }
+                }
+        });
+        
+        authLoginButton.addEventListener('click', async (event) => {
+            event.preventDefault();
+            authErrorMessage.classList.add('hidden');
+            const email = authEmail.value;
+            const password = authPassword.value;
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                console.error("Login failed:", error);
+                authErrorMessage.textContent = `Login failed: ${error.message}`;
+                authErrorMessage.classList.remove('hidden');
+            }
+        });
+
+        authSignupButton.addEventListener('click', async (event) => {
+            event.preventDefault();
+            authErrorMessage.classList.add('hidden');
+            const email = authEmail.value;
+            const password = authPassword.value;
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                showMessageBox("Sign up successful! You are now logged in.");
+            } catch (error) {
+                console.error("Sign up failed:", error);
+                authErrorMessage.textContent = `Sign up failed: ${error.message}`;
+                authErrorMessage.classList.remove('hidden');
+            }
+        });
+
+
         // --- Language translation data ---
         const translations = {
             en: {
@@ -574,6 +791,7 @@
                 voice_status_listening: "✨ Listening...",
                 voice_status_generating: "✨ Generating text...",
                 voice_status_speaking: "✨ Playing audio...",
+                voice_status_stopped: "Stopped.",
                 community_section: "",
                 community_title: "💬 Peer-to-Peer Community",
                 post_input_placeholder: "Share your thoughts...",
@@ -608,7 +826,12 @@
                 nav_aitools: "AI Tools",
                 nav_tools: "Tools",
                 nav_voice: "Voice",
-                nav_community: "Community"
+                nav_community: "Community",
+                sub_nav_crop_calendar: "Crop Calendar",
+                sub_nav_pest_control: "Pest Control",
+                sub_nav_fertilizer: "Fertilizer",
+                sub_nav_water_usage: "Water Usage",
+                voice_button_stop: "Stop"
             },
             hi: {
                 app_title: "किसान साथी",
@@ -649,6 +872,7 @@
                 voice_status_listening: "✨ सुन रहा है...",
                 voice_status_generating: "✨ जवाब बना रहा है...",
                 voice_status_speaking: "✨ ऑडियो चला रहा है...",
+                voice_status_stopped: "बंद हो गया।",
                 community_section: "",
                 community_title: "💬 किसान समुदाय",
                 post_input_placeholder: "अपने विचार साझा करें...",
@@ -683,7 +907,12 @@
                 nav_aitools: "एआई उपकरण",
                 nav_tools: "उपकरण",
                 nav_voice: "वॉयस",
-                nav_community: "समुदाय"
+                nav_community: "समुदाय",
+                sub_nav_crop_calendar: "फसल कैलेंडर",
+                sub_nav_pest_control: "कीट नियंत्रण",
+                sub_nav_fertilizer: "खाद",
+                sub_nav_water_usage: "पानी का उपयोग",
+                voice_button_stop: "बंद करें"
             },
             te: {
                 app_title: "కిసాన్ సాథి",
@@ -724,6 +953,7 @@
                 voice_status_listening: "✨ వినబడుతోంది...",
                 voice_status_generating: "✨ ప్రతిస్పందనను సృష్టిస్తోంది...",
                 voice_status_speaking: "✨ ఆడియో ప్లే చేస్తోంది...",
+                voice_status_stopped: "ఆగిపోయింది.",
                 community_section: "",
                 community_title: "💬 రైతు సంఘం",
                 post_input_placeholder: "మీ ఆలోచనలను పంచుకోండి...",
@@ -758,7 +988,12 @@
                 nav_aitools: "ఎఐ ఉపకరణాలు",
                 nav_tools: "ఉపకరణాలు",
                 nav_voice: "వాయిస్",
-                nav_community: "సంఘం"
+                nav_community: "సంఘం",
+                sub_nav_crop_calendar: "పంటల క్యాలెండర్",
+                sub_nav_pest_control: "పురుగుల నివారణ",
+                sub_nav_fertilizer: "ఎరువులు",
+                sub_nav_water_usage: "నీటి వాడకం",
+                voice_button_stop: "ఆపు"
             }
         };
         
@@ -838,6 +1073,8 @@
         window.onload = () => {
             const tabs = document.querySelectorAll('.nav-icon');
             const sections = document.querySelectorAll('.tab-content');
+            const subTabs = document.querySelectorAll('.sub-nav-btn');
+            const subTabContents = document.querySelectorAll('.sub-tab-content');
             const langSelector = document.getElementById('language-selector');
 
             const advisoryForm = document.getElementById('advisory-form');
@@ -855,6 +1092,7 @@
             const arCanvas = document.getElementById('ar-canvas');
             
             const voiceButton = document.getElementById('voice-button');
+            const voiceStopButton = document.getElementById('voice-stop-button');
             const voiceSpinner = document.getElementById('voice-spinner');
             const voiceStatus = document.getElementById('voice-status');
             const ttsAudio = document.getElementById('tts-audio');
@@ -878,6 +1116,19 @@
             const getMarketAnalysisButton = document.getElementById('get-market-analysis-button');
             const marketForecastText = document.getElementById('market-forecast-text');
             const marketAnalysisSpinner = document.getElementById('market-analysis-spinner');
+            const marketDataContainer = document.getElementById('market-data-container');
+            
+            const weatherTempEl = document.getElementById('weather-temp');
+            const weatherDescEl = document.getElementById('weather-desc');
+            const weatherHumidityEl = document.getElementById('weather-humidity');
+            const weatherWindEl = document.getElementById('weather-wind');
+            const weatherAlertCard = document.getElementById('weather-alert-card');
+            const weatherAlertText = document.getElementById('weather-alert-text');
+            const weatherIconEl = document.getElementById('weather-icon');
+            const cityNameEl = document.getElementById('city-name');
+            const priceRiceEl = document.getElementById('price-rice');
+            const priceWheatEl = document.getElementById('price-wheat');
+            const priceCottonEl = document.getElementById('price-cotton');
 
             const getQuizButton = document.getElementById('get-quiz-button');
             const quizArea = document.getElementById('quiz-area');
@@ -885,9 +1136,8 @@
             const quizOptionsEl = document.getElementById('quiz-options');
             const quizResultEl = document.getElementById('quiz-result');
             const quizSpinner = document.getElementById('quiz-spinner');
-            const bottomNav = document.getElementById('bottom-nav');
 
-             // --- Tone.js Sound Synthesis ---
+            // --- Tone.js Sound Synthesis ---
             let synth;
             function initializeSynth() {
                 // Initialize synth only once
@@ -925,13 +1175,17 @@
 
 
             // --- LLM API Constants and Functions ---
-            const API_KEY = "AIzaSyCKRtNQFxMaD9bJsA1r5D1Kj6AELyWacvU";
-            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${API_KEY}`;
-            const TTS_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${API_KEY}`;
+            const GEMINI_API_KEY = "AIzaSyCKRtNQFxMaD9bJsA1r5D1Kj6AELyWacvU";
+            const WEATHER_API_KEY = "29f68aac28703f2e0f8308b7675f85a1";
+            const MARKET_API_KEY = "XXKC46ZOURPHI4TG"; // This is not used for real data due to API limitations
+            
+            const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${GEMINI_API_KEY}`;
+            const TTS_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${GEMINI_API_KEY}`;
+            const WEATHER_API_URL = `https://api.openweathermap.org/data/2.5/weather?q=Visakhapatnam,in&appid=${WEATHER_API_KEY}&units=metric`;
             const TTS_VOICE = "Kore";
             
             async function callGeminiAPI(prompt, images = [], showSpinner, textElement) {
-                if (API_KEY === "") {
+                if (GEMINI_API_KEY === "") {
                     showMessageBox("Gemini API Key is missing. Please add it to the script to enable AI features.");
                     if (showSpinner) showSpinner.classList.add('hidden');
                     return "Error: API Key is missing.";
@@ -953,7 +1207,7 @@
                 const maxRetries = 8;
                 while (retryCount < maxRetries) {
                     try {
-                        const response = await fetch(API_URL, {
+                        const response = await fetch(GEMINI_API_URL, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(payload)
@@ -992,7 +1246,7 @@
             }
 
             async function callGeminiAPIwithSchema(prompt, schema) {
-                if (API_KEY === "") {
+                if (GEMINI_API_KEY === "") {
                     showMessageBox("Gemini API Key is missing. Please add it to the script.");
                     return null;
                 }
@@ -1009,7 +1263,7 @@
                 const maxRetries = 8;
                 while (retryCount < maxRetries) {
                     try {
-                        const response = await fetch(API_URL, {
+                        const response = await fetch(GEMINI_API_URL, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(payload)
@@ -1040,13 +1294,19 @@
                 return null;
             }
 
-            async function callGeminiTTS(text) {
-                if (API_KEY === "") {
+            async function callGeminiTTS(text, lang) {
+                if (GEMINI_API_KEY === "") {
                     showMessageBox("Gemini API Key is missing. Please add it to the script.");
                     return null;
                 }
+                const langMap = {
+                    en: 'en-US',
+                    hi: 'hi-IN',
+                    te: 'te-IN'
+                };
+                const langCode = langMap[lang] || 'en-US';
                 const payload = {
-                    contents: [{ parts: [{ text: `Say in a clear, helpful tone: ${text}` }] }],
+                    contents: [{ parts: [{ text: `Say in a clear, helpful tone in ${langCode} language: ${text}` }] }],
                     generationConfig: {
                         responseModalities: ["AUDIO"],
                         speechConfig: {
@@ -1072,19 +1332,19 @@
                         const part = result?.candidates?.[0]?.content?.parts?.[0];
                         return part?.inlineData?.data;
                     } catch (error) {
-                         console.error(`TTS Attempt ${retryCount + 1} failed:`, error);
-                         if (retryCount < maxRetries - 1) {
-                            const delay = Math.pow(2, retryCount) * 1000 + Math.random() * 100;
-                             await new Promise(res => setTimeout(res, delay));
-                             retryCount++;
-                         } else {
+                          console.error(`TTS Attempt ${retryCount + 1} failed:`, error);
+                          if (retryCount < maxRetries - 1) {
+                              const delay = Math.pow(2, retryCount) * 1000 + Math.random() * 100;
+                              await new Promise(res => setTimeout(res, delay));
+                              retryCount++;
+                            } else {
                             if (error.message.includes('503')) {
                                 showMessageBox("The audio generation service is temporarily unavailable. Please try again in a few moments.");
                             } else {
                                 showMessageBox("Error: Could not generate audio. Please check your network and API key.");
                             }
-                             return null;
-                         }
+                            return null;
+                            }
                     }
                 }
                 return null;
@@ -1154,25 +1414,67 @@
                     }
                 });
             }
+
+            // Function to fetch and display weather data
+            async function fetchWeatherData() {
+                try {
+                    const response = await fetch(WEATHER_API_URL);
+                    if (!response.ok) {
+                        throw new Error('Weather API call failed');
+                    }
+                    const data = await response.json();
+                    
+                    weatherTempEl.textContent = `${Math.round(data.main.temp)}°C`;
+                    weatherDescEl.textContent = data.weather[0].description;
+                    weatherHumidityEl.textContent = `${data.main.humidity}%`;
+                    weatherWindEl.textContent = `${data.wind.speed} km/h`;
+                    cityNameEl.textContent = data.name;
+
+                    const iconCode = data.weather[0].icon;
+                    weatherIconEl.innerHTML = `<img src="http://openweathermap.org/img/wn/${iconCode}@2x.png" alt="Weather icon" class="w-16 h-16">`;
+
+                    if (data.alerts && data.alerts.length > 0) {
+                        weatherAlertCard.classList.remove('hidden');
+                        weatherAlertText.textContent = data.alerts[0].description;
+                    } else {
+                        weatherAlertCard.classList.add('hidden');
+                    }
+                } catch (error) {
+                    console.error("Failed to fetch weather data:", error);
+                    weatherTempEl.textContent = "N/A";
+                    weatherDescEl.textContent = "Error";
+                    weatherHumidityEl.textContent = "N/A";
+                    weatherWindEl.textContent = "N/A";
+                }
+            }
+            
+            // Initial data fetch
+            fetchWeatherData();
             
             updateLanguage(langSelector.value);
             langSelector.addEventListener('change', (event) => updateLanguage(event.target.value));
 
-            bottomNav.addEventListener('click', (e) => {
-                const clickedTab = e.target.closest('.nav-icon');
-                if (!clickedTab) return;
-
-                e.preventDefault();
-
-                tabs.forEach(tab => tab.classList.remove('active'));
-                sections.forEach(section => section.classList.remove('active'));
-
-                clickedTab.classList.add('active');
-                const targetId = clickedTab.getAttribute('data-tab-name');
-                const targetSection = document.getElementById(targetId);
-                if (targetSection) {
-                    targetSection.classList.add('active');
-                }
+            tabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    tabs.forEach(t => t.classList.remove('active'));
+                    sections.forEach(s => s.classList.remove('active'));
+                    tab.classList.add('active');
+                    const targetId = tab.getAttribute('data-tab-name');
+                    document.getElementById(targetId).classList.add('active');
+                });
+            });
+            
+            // Sub-tab switching logic for the "Tools" section
+            subTabs.forEach(subTab => {
+                subTab.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    subTabs.forEach(t => t.classList.remove('active'));
+                    subTabContents.forEach(c => c.classList.add('hidden'));
+                    subTab.classList.add('active');
+                    const targetId = subTab.getAttribute('data-sub-tab');
+                    document.getElementById(targetId).classList.remove('hidden');
+                });
             });
 
             advisoryForm.addEventListener('submit', async (event) => {
@@ -1183,28 +1485,62 @@
                 advisorySpinner.classList.remove('hidden');
                 resultText.textContent = translations[langSelector.value].voice_status_generating;
                 
-                const prompt = `Act as an agricultural expert for Indian farmers. Soil type: "${soilType}", Crop: "${cropType}". Provide a simple, actionable, bulleted list of 3-5 recommendations for soil prep, irrigation, and fertilizer. Keep it concise.`;
-                const response = await callGeminiAPI(prompt, [], advisorySpinner, resultText);
-                resultText.textContent = response || 'Could not get a response. Please try again.';
+                const selectedLang = langSelector.value;
+                const langMap = {
+                    en: 'English',
+                    hi: 'Hindi',
+                    te: 'Telugu'
+                };
+                const responseLang = langMap[selectedLang] || 'English';
+
+                try {
+                    const prompt = `Act as an agricultural expert for Indian farmers. Soil type: "${soilType}", Crop: "${cropType}". Provide a simple, actionable, bulleted list of 3-5 recommendations for soil prep, irrigation, and fertilizer. IMPORTANT: The entire response must be in the ${responseLang} language.`;
+                    const response = await callGeminiAPI(prompt, [], advisorySpinner, resultText);
+                    resultText.textContent = response || 'Could not get a response. Please try again.';
+                } catch (error) {
+                    console.error("Advisory API call failed:", error);
+                    resultText.textContent = "An error occurred while fetching advice. Please try again.";
+                } finally {
+                    advisorySpinner.classList.add('hidden');
+                }
             });
 
             pestUpload.addEventListener('change', (event) => {
                 const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = async function(e) {
+                if (!file) {
+                    showMessageBox("No file selected. Please choose an image to upload.");
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    try {
                         const base64Image = e.target.result.split(',')[1];
                         pestPreview.src = e.target.result;
                         pestPreview.classList.remove('hidden');
                         pestResult.style.display = 'block';
                         detectionText.textContent = translations[langSelector.value].get_tip_loading;
-                        
-                        const prompt = `As a plant disease expert, analyze this image. Identify the disease/pest, describe symptoms, and provide a simple treatment plan. If it's not a plant issue, say "Could not detect a plant disease."`;
+
+                        const selectedLang = langSelector.value;
+                        const langMap = {
+                            en: 'English',
+                            hi: 'Hindi',
+                            te: 'Telugu'
+                        };
+                        const responseLang = langMap[selectedLang] || 'English';
+
+                        const prompt = `As a plant disease expert, analyze this image. Identify the disease/pest, describe symptoms, and provide a simple treatment plan. If it's not a plant issue, say "Could not detect a plant disease." IMPORTANT: The entire response must be in the ${responseLang} language.`;
                         const response = await callGeminiAPI(prompt, [base64Image], null, detectionText);
                         detectionText.textContent = response || 'Could not detect a plant disease.';
-                    };
-                    reader.readAsDataURL(file);
-                }
+                    } catch (error) {
+                        console.error("Error during pest detection:", error);
+                        detectionText.textContent = "An error occurred during detection. Please try a different image.";
+                    }
+                };
+                reader.onerror = function() {
+                    console.error("FileReader error:", reader.error);
+                    showMessageBox("Failed to read the image file. Please try again.");
+                };
+                reader.readAsDataURL(file);
             });
             
             arButton.addEventListener('click', () => {
@@ -1230,16 +1566,22 @@
                     isListening = true;
                     voiceStatus.textContent = translations[langSelector.value].voice_status_listening;
                     voiceButton.classList.add('voice-button-pulse');
+                    voiceStopButton.classList.remove('hidden');
                     voiceSpinner.classList.remove('hidden');
                 };
 
                 recognition.onend = () => {
                     isListening = false;
-                    voiceButton.classList.remove('voice-button-pulse');
+                    voiceStopButton.classList.add('hidden');
                     voiceSpinner.classList.add('hidden');
-                    if(voiceStatus.textContent === translations[langSelector.value].voice_status_listening){
-                         voiceStatus.textContent = translations[langSelector.value].voice_status_ready;
-                    }
+                };
+                
+                ttsAudio.onended = () => {
+                    playEndSound();
+                    voiceStatus.textContent = translations[langSelector.value].voice_status_ready;
+                    voiceButton.classList.remove('voice-button-pulse');
+                    voiceStopButton.classList.add('hidden');
+                    voiceSpinner.classList.add('hidden');
                 };
 
                 recognition.onresult = async (event) => {
@@ -1247,41 +1589,49 @@
                     const responseArea = document.getElementById('voice-response-area');
                     const responseTextEl = document.getElementById('voice-response-text');
                     
-                    voiceStatus.textContent = `You said: "${transcript}"`;
                     voiceStatus.textContent = translations[langSelector.value].voice_status_generating;
                     
-                    const prompt = `Act as a helpful farmer's assistant. A user asked: "${transcript}". Provide a concise and simple answer.`;
+                    const selectedLang = langSelector.value;
+                    const langMap = {
+                        en: 'English',
+                        hi: 'Hindi',
+                        te: 'Telugu'
+                    };
+                    const responseLang = langMap[selectedLang] || 'English';
+
+                    const prompt = `Act as a helpful farmer's assistant. A user asked: "${transcript}". Provide a concise and simple answer. IMPORTANT: The entire response must be in the ${responseLang} language.`;
                     const responseText = await callGeminiAPI(prompt, [], null, voiceStatus);
                     
                     responseArea.classList.remove('hidden');
                     responseTextEl.textContent = responseText;
                     
                     if (responseText && !responseText.startsWith("Error:")) {
-                        voiceStatus.textContent = "Now, generating audio..."; // New status update
-                        const audioData = await callGeminiTTS(responseText);
+                        voiceStatus.textContent = translations[langSelector.value].voice_status_speaking;
+                        const audioData = await callGeminiTTS(responseText, langSelector.value);
                         
                         if (audioData) {
-                            voiceStatus.textContent = translations[langSelector.value].voice_status_speaking;
                             const pcmData = base64ToArrayBuffer(audioData);
                             const wavBlob = pcmToWav(pcmData);
                             const audioUrl = URL.createObjectURL(wavBlob);
                             ttsAudio.src = audioUrl;
                             ttsAudio.play();
-                            ttsAudio.onended = () => {
-                                playEndSound();
-                                voiceStatus.textContent = translations[langSelector.value].voice_status_ready;
-                            };
                         } else {
                             voiceStatus.textContent = translations[langSelector.value].voice_status_ready;
+                            voiceButton.classList.remove('voice-button-pulse');
+                            voiceStopButton.classList.add('hidden');
+                            voiceSpinner.classList.add('hidden');
                             playEndSound();
                         }
                     } else {
-                         voiceStatus.textContent = translations[langSelector.value].voice_status_ready;
-                         playEndSound();
+                            voiceStatus.textContent = translations[langSelector.value].voice_status_ready;
+                            voiceButton.classList.remove('voice-button-pulse');
+                            voiceStopButton.classList.add('hidden');
+                            voiceSpinner.classList.add('hidden');
+                            playEndSound();
                     }
                 };
 
-                 voiceButton.addEventListener('click', () => {
+                voiceButton.addEventListener('click', () => {
                     if (typeof Tone !== 'undefined' && Tone.context.state !== 'running') {
                         Tone.context.resume();
                     }
@@ -1292,6 +1642,22 @@
                         recognition.stop();
                     }
                 });
+
+                voiceStopButton.addEventListener('click', () => {
+                    if (recognition) {
+                        recognition.stop();
+                    }
+                    if (ttsAudio) {
+                        ttsAudio.pause();
+                        ttsAudio.currentTime = 0;
+                    }
+                    voiceStatus.textContent = translations[langSelector.value].voice_status_stopped;
+                    voiceButton.classList.remove('voice-button-pulse');
+                    voiceStopButton.classList.add('hidden');
+                    voiceSpinner.classList.add('hidden');
+                    playEndSound();
+                });
+
             } else {
                 voiceStatus.textContent = "Voice recognition not supported in this browser.";
                 voiceButton.disabled = true;
@@ -1324,7 +1690,15 @@
                 aiReplySpinner.classList.remove('hidden');
                 aiReplyText.textContent = translations[langSelector.value].ai_reply_loading;
 
-                const prompt = `Act as an agricultural expert. Below is a conversation between farmers. Provide a helpful, concise response to the latest questions or topics. If no question, offer a relevant tip.\n\nConversation:\n${posts}`;
+                const selectedLang = langSelector.value;
+                const langMap = {
+                    en: 'English',
+                    hi: 'Hindi',
+                    te: 'Telugu'
+                };
+                const responseLang = langMap[selectedLang] || 'English';
+
+                const prompt = `Act as an agricultural expert. Below is a conversation between farmers. Provide a helpful, concise response to the latest questions or topics. If no question, offer a relevant tip. IMPORTANT: The entire response must be in the ${responseLang} language.`;
                 const response = await callGeminiAPI(prompt, [], aiReplySpinner, aiReplyText);
                 aiReplyText.textContent = response || "Could not generate a reply.";
             });
@@ -1334,7 +1708,15 @@
                 geminiTipSpinner.classList.remove('hidden');
                 geminiTipText.textContent = translations[langSelector.value].get_tip_loading;
 
-                const prompt = "Provide a single, short, and actionable sustainable farming tip for a small-scale farmer in India.";
+                const selectedLang = langSelector.value;
+                const langMap = {
+                    en: 'English',
+                    hi: 'Hindi',
+                    te: 'Telugu'
+                };
+                const responseLang = langMap[selectedLang] || 'English';
+
+                const prompt = `Provide a single, short, and actionable sustainable farming tip for a small-scale farmer in India. IMPORTANT: The entire response must be in the ${responseLang} language.`;
                 const response = await callGeminiAPI(prompt, [], geminiTipSpinner, geminiTipText);
                 geminiTipText.textContent = response || "Could not get a tip. Please try again.";
             });
@@ -1365,17 +1747,22 @@
                 marketAnalysisSpinner.classList.remove('hidden');
                 marketForecastText.textContent = 'Fetching live analysis...';
 
-                const selectedLang = langSelector.value;
-                const langMap = {
-                    en: 'English',
-                    hi: 'Hindi',
-                    te: 'Telugu'
+                // NOTE: Alpha Vantage API is for financial securities, not agricultural commodities.
+                // We are using mock data here as a placeholder.
+                const mockMarketData = {
+                    rice: Math.floor(Math.random() * (3600 - 3400 + 1)) + 3400,
+                    wheat: Math.floor(Math.random() * (2900 - 2700 + 1)) + 2700,
+                    cotton: Math.floor(Math.random() * (6300 - 6100 + 1)) + 6100
                 };
-                const responseLang = langMap[selectedLang] || 'English';
-
-                const prompt = `Provide a brief, real-time market analysis for rice, wheat, and cotton in Andhra Pradesh, India. Mention current price trends and a short-term forecast in one paragraph. IMPORTANT: The entire response must be in the ${responseLang} language.`;
-                const response = await callGeminiAPI(prompt, [], marketAnalysisSpinner, marketForecastText);
-                marketForecastText.textContent = response || "Could not fetch market analysis.";
+                
+                // Simulate a network delay
+                setTimeout(() => {
+                    priceRiceEl.textContent = `₹ ${mockMarketData.rice}`;
+                    priceWheatEl.textContent = `₹ ${mockMarketData.wheat}`;
+                    priceCottonEl.textContent = `₹ ${mockMarketData.cotton}`;
+                    marketAnalysisSpinner.classList.add('hidden');
+                    marketForecastText.textContent = translations[langSelector.value].market_forecast;
+                }, 1500);
             });
 
             getQuizButton.addEventListener('click', async () => {
@@ -1431,4 +1818,3 @@
     </script>
 </body>
 </html>
-
